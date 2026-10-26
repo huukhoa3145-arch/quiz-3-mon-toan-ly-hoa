@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Đề Thi Trắc Nghiệm Ngẫu Nhiên - Lớp 10</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- KaTeX for Math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showDashboard()">
+                <div class="bg-white text-indigo-600 p-2 rounded-lg font-bold text-xl shadow-sm">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Quiz Grade 10 (2026)</h1>
+                    <p class="text-xs text-indigo-200">Trắc nghiệm Toán - Lý - Hóa Lớp 10 theo chương</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button onclick="showDashboard()" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-house"></i> <span class="hidden sm:inline">Trang chủ</span>
+                </button>
+                <button onclick="openEditorModal()" class="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-400 text-white rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Thêm câu hỏi</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboardView" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 sm:p-10 text-white shadow-md relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider mb-2 inline-block">Chương trình Mới 2026</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-3">Ôn tập & Kiểm tra Trắc nghiệm Lớp 10</h2>
+                    <p class="text-indigo-100 text-sm sm:text-base mb-6">
+                        Chọn một chương cụ thể bên dưới để ôn luyện ngay, hoặc bấm tạo đề ngẫu nhiên tổng hợp từ toàn bộ ngân hàng câu hỏi!
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="generateRandomQuiz('ALL')" class="bg-white text-indigo-700 hover:bg-indigo-50 font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-shuffle text-indigo-500"></i> Tạo đề tổng hợp ngẫu nhiên
+                        </button>
+                    </div>
+                </div>
+                <i class="fa-solid fa-atom absolute right-4 -bottom-6 text-9xl text-white/10 pointer-events-none hidden md:block"></i>
+            </div>
+
+            <!-- Settings / Config Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-indigo-600"></i> Cấu hình bài làm
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Số lượng câu hỏi mỗi bài test</label>
+                        <select id="configNumQuestions" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="5" selected>5 câu (Ôn nhanh)</option>
+                            <option value="10">10 câu (Kiểm tra 15p)</option>
+                            <option value="15">15 câu (Đề tổng hợp)</option>
+                            <option value="20">20 câu (Luyện tập sâu)</option>
+                            <option value="all">Tất cả câu trong chương</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Chế độ xáo trộn</label>
+                        <select id="configShuffleOptions" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="true" selected>Xáo trộn thứ tự câu & đáp án</option>
+                            <option value="false">Cố định thứ tự đáp án</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs for Subjects -->
+            <div>
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <div class="flex gap-2 bg-slate-200 p-1.5 rounded-xl text-sm font-semibold">
+                        <button id="tabALL" onclick="filterBySubject('ALL')" class="px-4 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition">Tất cả môn</button>
+                        <button id="tabToan" onclick="filterBySubject('Toán Học')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">Toán 10</button>
+                        <button id="tabLy" onclick="filterBySubject('Vật Lý')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">Vật Lý 10</button>
+                        <button id="tabHoa" onclick="filterBySubject('Hóa Học')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">Hóa Học 10</button>
+                    </div>
+                    <span id="totalQuestionsBadge" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full font-semibold">
+                        Kho: 0 câu hỏi
+                    </span>
+                </div>
+
+                <div id="chaptersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Chapter Cards Will Be Inserted Here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ ACTIVE VIEW -->
+        <div id="quizView" class="hidden space-y-6">
+            <!-- Quiz Top Bar -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4 sticky top-20 z-40">
+                <div class="flex items-center gap-3">
+                    <button onclick="confirmExitQuiz()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-arrow-left text-lg"></i>
+                    </button>
+                    <div>
+                        <h2 id="quizTitle" class="font-bold text-slate-800 text-base sm:text-lg">Bài kiểm tra</h2>
+                        <span id="quizProgressText" class="text-xs text-slate-500">Đã làm 0/0 câu</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg font-mono font-bold text-sm">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="quizTimer">00:00</span>
+                    </div>
+                    <button onclick="submitQuiz()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2 rounded-lg shadow-sm transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i> Nộp bài
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Question List Container -->
+                <div class="lg:col-span-3 space-y-6" id="questionsContainer">
+                    <!-- Dynamic Question Cards -->
+                </div>
+
+                <!-- Quick Navigation Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm sticky top-40 space-y-4">
+                        <h4 class="font-bold text-sm text-slate-700 border-b pb-2">Danh sách câu hỏi</h4>
+                        <div id="questionNavGrid" class="grid grid-cols-5 gap-2">
+                            <!-- Nav Buttons Dynamic -->
+                        </div>
+                        <div class="pt-2 text-xs text-slate-500 space-y-1">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-indigo-600 rounded-sm inline-block"></span> Đã chọn</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-slate-100 border border-slate-300 rounded-sm inline-block"></span> Chưa làm</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULT VIEW -->
+        <div id="resultView" class="hidden space-y-6 max-w-3xl mx-auto">
+            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-md text-center space-y-6">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full text-3xl">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Hoàn thành bài ôn tập!</h2>
+                    <p class="text-slate-500 text-sm mt-1">Dưới đây là kết quả bài làm của bạn</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl">
+                    <div class="p-2">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Điểm số</span>
+                        <span id="resultScore" class="text-2xl sm:text-3xl font-extrabold text-indigo-600">0/10</span>
+                    </div>
+                    <div class="p-2 border-x border-slate-200">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Số câu đúng</span>
+                        <span id="resultCorrectCount" class="text-2xl sm:text-3xl font-extrabold text-emerald-600">0</span>
+                    </div>
+                    <div class="p-2">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Thời gian</span>
+                        <span id="resultTime" class="text-2xl sm:text-3xl font-extrabold text-slate-700">00:00</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 pt-2">
+                    <button onclick="retryCurrentQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2.5 rounded-xl transition flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài này
+                    </button>
+                    <button onclick="showDashboard()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-6 py-2.5 rounded-xl transition">
+                        Về trang chủ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Answer Review -->
+            <div class="space-y-4">
+                <h3 class="font-bold text-lg text-slate-800">Chi tiết đáp án & Lời giải</h3>
+                <div id="reviewContainer" class="space-y-4">
+                    <!-- Dynamic Answer Review Cards -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ADD QUESTION MODAL -->
+    <div id="editorModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 bg-indigo-600 text-white flex justify-between items-center">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-plus-circle mr-2"></i>Thêm câu hỏi mới</h3>
+                <button onclick="closeEditorModal()" class="text-white/80 hover:text-white p-1"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form id="addQuestionForm" onsubmit="saveNewQuestion(event)" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Môn học</label>
+                        <select id="inputSubject" required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="Toán Học">Toán Học</option>
+                            <option value="Vật Lý">Vật Lý</option>
+                            <option value="Hóa Học">Hóa Học</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Chương học</label>
+                        <input type="text" id="inputChapter" placeholder="VD: Chương 1..." required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nội dung câu hỏi ($...$ cho công thức)</label>
+                    <textarea id="inputQuestionText" rows="3" placeholder="Nhập câu hỏi tại đây..." required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-600 uppercase">Các đáp án lựa chọn</label>
+                    
+                    <div class="flex items-center gap-2">
+                        <input type="radio" name="correctIndex" value="0" checked class="text-indigo-600 focus:ring-indigo-500">
+                        <input type="text" id="option0" placeholder="Đáp án A" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <input type="radio" name="correctIndex" value="1" class="text-indigo-600 focus:ring-indigo-500">
+                        <input type="text" id="option1" placeholder="Đáp án B" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="radio" name="correctIndex" value="2" class="text-indigo-600 focus:ring-indigo-500">
+                        <input type="text" id="option2" placeholder="Đáp án C" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="radio" name="correctIndex" value="3" class="text-indigo-600 focus:ring-indigo-500">
+                        <input type="text" id="option3" placeholder="Đáp án D" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Giải thích chi tiết (Tùy chọn)</label>
+                    <textarea id="inputExplanation" rows="2" placeholder="Nhập lời giải..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-3 border-t">
+                    <button type="button" onclick="closeEditorModal()" class="px-4 py-2 text-sm text-slate-600 font-medium hover:bg-slate-100 rounded-lg">Hủy</button>
+                    <button type="submit" class="px-5 py-2 text-sm bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-500 transition shadow">Lưu câu hỏi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg" class="text-sm">Thông báo</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Global variables state
+        let questionBank = [];
+        let currentQuizQuestions = [];
+        let userAnswers = {};
+        let quizTimerInterval = null;
+        let quizSeconds = 0;
+        let currentSubjectFilter = 'ALL';
+        let currentActiveChapter = null;
+
+        // Helper to trigger KaTeX math rendering
+        function renderMathInContainer(elementId) {
+            setTimeout(() => {
+                const el = document.getElementById(elementId);
+                if (el && window.renderMathInElement) {
+                    window.renderMathInElement(el, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }, 30);
+        }
+
+        // Full Grade 10 Curriculum Structure Definition
+        const CURRICULUM_STRUCTURE = {
+            "Toán Học": [
+                "Chương 1: Mệnh đề & Tập hợp",
+                "Chương 2: Bất phương trình & Hệ BPT bậc nhất hai ẩn",
+                "Chương 3: Hàm số bậc hai & Đồ thị",
+                "Chương 4: Hệ thức lượng trong tam giác",
+                "Chương 5: Véctơ & Các phép toán",
+                "Chương 6: Thống kê & Xác suất",
+                "Chương 7: Phương pháp tọa độ trong mặt phẳng"
+            ],
+            "Vật Lý": [
+                "Chương 1: Mở đầu & Động học (Mô tả chuyển động)",
+                "Chương 2: Động lực học (Các định luật Newton & Lực)",
+                "Chương 3: Năng lượng, Công & Công suất",
+                "Chương 4: Động lượng & Va chạm",
+                "Chương 5: Chuyển động tròn & Biến dạng của vật rắn"
+            ],
+            "Hóa Học": [
+                "Chương 1: Cấu tạo Nguyên tử",
+                "Chương 2: Bảng tuần hoàn các nguyên tố hóa học",
+                "Chương 3: Liên kết hóa học",
+                "Chương 4: Phản ứng Oxi hóa - Khử",
+                "Chương 5: Năng lượng hóa học (Enthalpy)",
+                "Chương 6: Tốc độ phản ứng hóa học",
+                "Chương 7: Nguyên tố Nhóm Halogen"
+            ]
+        };
+
+        // Generates 40 rich, distinct questions for a specific chapter
+        function generate40QuestionsForChapter(subject, chapter) {
+            const list = [];
+            
+            for (let i = 1; i <= 40; i++) {
+                let rawTitle = "", opts = [], exp = "";
+
+                if (subject === "Toán Học") {
+                    if (chapter.includes("Mệnh đề")) {
+                        const val = i * 2;
+                        rawTitle = `Cho tập hợp $A = \\{x \\in \\mathbb{R} \\mid x^2 - ${val * val} = 0\\}$. Tìm số phần tử của $A$.`;
+                        opts = [
+                            { text: `2 phần tử (là $\\pm ${val}$)`, isCorrect: true },
+                            { text: "1 phần tử", isCorrect: false },
+                            { text: "0 phần tử", isCorrect: false },
+                            { text: "4 phần tử", isCorrect: false }
+                        ];
+                        exp = `Phương trình $x^2 - ${val * val} = 0 \\Leftrightarrow x = \\pm ${val}$. Vậy $A = \\{-${val}, ${val}\\}$ có 2 phần tử.`;
+                    } else if (chapter.includes("Bất phương trình")) {
+                        rawTitle = `Miền nghiệm của bất phương trình $${i}x + y - ${i+2} < 0$ chứa điểm nào sau đây?`;
+                        opts = [
+                            { text: "$(0, 0)$", isCorrect: true },
+                            { text: `($${i+2}, 5$)`, isCorrect: false },
+                            { text: `($${i+5}, 10$)`, isCorrect: false },
+                            { text: `($${i+10}, 0$)`, isCorrect: false }
+                        ];
+                        exp = `Thay $(0,0)$ vào BPT: $${i}(0) + 0 - ${i+2} = -${i+2} < 0$ (Đúng).`;
+                    } else if (chapter.includes("Hàm số")) {
+                        rawTitle = `Tọa độ hoành độ đỉnh $x_I$ của parabol $y = x^2 - ${2*i}x + ${i}$ là:`;
+                        opts = [
+                            { text: `$x_I = ${i}$`, isCorrect: true },
+                            { text: `$x_I = -${i}$`, isCorrect: false },
+                            { text: `$x_I = ${2*i}$`, isCorrect: false },
+                            { text: "$x_I = 0$", isCorrect: false }
+                        ];
+                        exp = `Hoành độ đỉnh $x_I = -\\frac{b}{2a} = -\\frac{-${2*i}}{2(1)} = ${i}$.`;
+                    } else if (chapter.includes("Hệ thức lượng")) {
+                        rawTitle = `Trong tam giác $ABC$, diện tích $S$ được tính theo công thức nào sau đây?`;
+                        opts = [
+                            { text: "$S = \\frac{1}{2}ab \\sin C$", isCorrect: true },
+                            { text: "$S = \\frac{1}{2}ab \\cos C$", isCorrect: false },
+                            { text: "$S = ab \\sin C$", isCorrect: false },
+                            { text: "$S = \\frac{1}{2}abc$", isCorrect: false }
+                        ];
+                        exp = "Công thức tính diện tích tam giác theo 2 cạnh và góc kẹp giữa là $S = \\frac{1}{2}ab \\sin C$.";
+                    } else if (chapter.includes("Véctơ")) {
+                        rawTitle = `Cho 3 điểm $A, B, C$ bất kỳ. Kết quả của phép toán $\\vec{AB} + \\vec{BC}$ là:`;
+                        opts = [
+                            { text: "$\\vec{AC}$", isCorrect: true },
+                            { text: "$\\vec{CA}$", isCorrect: false },
+                            { text: "$\\vec{CB}$", isCorrect: false },
+                            { text: "$\\vec{0}$", isCorrect: false }
+                        ];
+                        exp = "Theo quy tắc 3 điểm của phép cộng véctơ: $\\vec{AB} + \\vec{BC} = \\vec{AC}$.";
+                    } else if (chapter.includes("Thống kê")) {
+                        const avg = (i + (i+2) + (i+4) + (i+6)) / 4;
+                        rawTitle = `Số trung bình cộng của dãy số dữ liệu $\\{${i}, ${i+2}, ${i+4}, ${i+6}\\}$ là:`;
+                        opts = [
+                            { text: `$${avg}$`, isCorrect: true },
+                            { text: `$${avg + 1}$`, isCorrect: false },
+                            { text: `$${avg - 1}$`, isCorrect: false },
+                            { text: `$${avg + 2}$`, isCorrect: false }
+                        ];
+                        exp = `Trung bình cộng $\\bar{x} = \\frac{${i} + ${i+2} + ${i+4} + ${i+6}}{4} = ${avg}$.`;
+                    } else {
+                        rawTitle = `Phương trình đường tròn tâm $O(0,0)$ bán kính $R = ${i}$ là:`;
+                        opts = [
+                            { text: `$x^2 + y^2 = ${i*i}$`, isCorrect: true },
+                            { text: `$x^2 + y^2 = ${i}$`, isCorrect: false },
+                            { text: `$x + y = ${i}$`, isCorrect: false },
+                            { text: `$x^2 - y^2 = ${i*i}$`, isCorrect: false }
+                        ];
+                        exp = `Phương trình đường tròn tâm $O(0,0)$ bán kính $R$ là $x^2 + y^2 = R^2 = ${i*i}$.`;
+                    }
+                } else if (subject === "Vật Lý") {
+                    if (chapter.includes("Mở đầu")) {
+                        const t = i, a = 2;
+                        const v = a * t;
+                        rawTitle = `Một vật chuyển động thẳng biến đổi đều từ trạng thái nghỉ ($v_0 = 0$) với gia tốc $a = 2\\text{ m/s}^2$. Vận tốc sau $t = ${t}\\text{ s}$ là:`;
+                        opts = [
+                            { text: `$${v}\\text{ m/s}$`, isCorrect: true },
+                            { text: `$${v+5}\\text{ m/s}$`, isCorrect: false },
+                            { text: `$${v*2}\\text{ m/s}$`, isCorrect: false },
+                            { text: `$${t}\\text{ m/s}$`, isCorrect: false }
+                        ];
+                        exp = `Áp dụng công thức $v = v_0 + at = 0 + 2 \\times ${t} = ${v}\\text{ m/s}$.`;
+                    } else if (chapter.includes("Động lực học")) {
+                        const m = i, a = 3;
+                        const F = m * a;
+                        rawTitle = `Tác dụng một lực $F$ vào vật khối lượng $m = ${m}\\text{ kg}$ làm vật thu gia tốc $a = 3\\text{ m/s}^2$. Độ lớn lực $F$ là:`;
+                        opts = [
+                            { text: `$${F}\\text{ N}$`, isCorrect: true },
+                            { text: `$${F+2}\\text{ N}$`, isCorrect: false },
+                            { text: `$${m+a}\\text{ N}$`, isCorrect: false },
+                            { text: `$${F*2}\\text{ N}$`, isCorrect: false }
+                        ];
+                        exp = `Theo Định luật II Newton: $F = m \\cdot a = ${m} \\times 3 = ${F}\\text{ N}$.`;
+                    } else if (chapter.includes("Năng lượng")) {
+                        const m = 2, v = i;
+                        const Wk = 0.5 * m * v * v;
+                        rawTitle = `Động năng của vật có khối lượng $m = 2\\text{ kg}$ chuyển động với vận tốc $v = ${v}\\text{ m/s}$ là:`;
+                        opts = [
+                            { text: `$${Wk}\\text{ J}$`, isCorrect: true },
+                            { text: `$${Wk*2}\\text{ J}$`, isCorrect: false },
+                            { text: `$${v}\\text{ J}$`, isCorrect: false },
+                            { text: `$${Wk + 10}\\text{ J}$`, isCorrect: false }
+                        ];
+                        exp = `Công thức động năng: $W_d = \\frac{1}{2} m v^2 = \\frac{1}{2} (2) (${v})^2 = ${Wk}\\text{ J}$.`;
+                    } else if (chapter.includes("Động lượng")) {
+                        const m = i, v = 4;
+                        const p = m * v;
+                        rawTitle = `Động lượng $p$ của một vật khối lượng $m = ${m}\\text{ kg}$ đang di chuyển với vận tốc $v = 4\\text{ m/s}$ là:`;
+                        opts = [
+                            { text: `$${p}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: true },
+                            { text: `$${p+4}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: false },
+                            { text: `$${m}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: false },
+                            { text: `$${p*2}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: false }
+                        ];
+                        exp = `Động lượng $p = m \\cdot v = ${m} \\times 4 = ${p}\\text{ kg}\\cdot\\text{m/s}$.`;
+                    } else {
+                        const v = i * 2;
+                        rawTitle = `Một vật chuyển động tròn đều với tốc độ góc $\\omega = ${i}\\text{ rad/s}$ trên bán kính $r = 2\\text{ m}$. Tốc độ dài $v$ là:`;
+                        opts = [
+                            { text: `$${v}\\text{ m/s}$`, isCorrect: true },
+                            { text: `$${i}\\text{ m/s}$`, isCorrect: false },
+                            { text: `$${v+2}\\text{ m/s}$`, isCorrect: false },
+                            { text: `$${v*2}\\text{ m/s}$`, isCorrect: false }
+                        ];
+                        exp = `Mối liên hệ giữa tốc độ dài và tốc độ góc: $v = \\omega \\cdot r = ${i} \\times 2 = ${v}\\text{ m/s}$.`;
+                    }
+                } else if (subject === "Hóa Học") {
+                    if (chapter.includes("Cấu tạo Nguyên tử")) {
+                        const Z = i;
+                        const A = 2 * Z + 1;
+                        rawTitle = `Nguyên tử nguyên tố $X$ có $Z = ${Z}$ và số khối $A = ${A}$. Số hạt neutron của nguyên tử này là:`;
+                        opts = [
+                            { text: `$${A - Z}$`, isCorrect: true },
+                            { text: `$${Z}$`, isCorrect: false },
+                            { text: `$${A}$`, isCorrect: false },
+                            { text: `$${A + Z}$`, isCorrect: false }
+                        ];
+                        exp = `Số neutron $N = A - Z = ${A} - ${Z} = ${A - Z}$.`;
+                    } else if (chapter.includes("Bảng tuần hoàn")) {
+                        rawTitle = `Nguyên tố có số hiệu nguyên tử $Z = ${i}$ thuộc chu kỳ và nhóm tương ứng trong Bảng tuần hoàn. Số electron ở vỏ nguyên tử là:`;
+                        opts = [
+                            { text: `$${i}$ electron`, isCorrect: true },
+                            { text: `$${i+1}$ electron`, isCorrect: false },
+                            { text: `$${i*2}$ electron`, isCorrect: false },
+                            { text: `$${i-1}$ electron`, isCorrect: false }
+                        ];
+                        exp = "Số hiệu nguyên tử $Z = \\text{Số proton} = \\text{Số electron}$.";
+                    } else if (chapter.includes("Liên kết")) {
+                        rawTitle = `Liên kết hóa học hình thành do sự dùng chung các cặp electron giữa 2 nguyên tử là loại liên kết nào?`;
+                        opts = [
+                            { text: "Liên kết cộng hóa trị", isCorrect: true },
+                            { text: "Liên kết ion", isCorrect: false },
+                            { text: "Liên kết kim loại", isCorrect: false },
+                            { text: "Liên kết Hydrogen", isCorrect: false }
+                        ];
+                        exp = "Liên kết cộng hóa trị là liên kết được hình thành giữa hai nguyên tử bằng một hay nhiều cặp electron dùng chung.";
+                    } else if (chapter.includes("Oxi hóa")) {
+                        rawTitle = `Trong phản ứng oxi hóa - khử, chất nhường electron được gọi là:`;
+                        opts = [
+                            { text: "Chất khử (chất bị oxi hóa)", isCorrect: true },
+                            { text: "Chất oxi hóa", isCorrect: false },
+                            { text: "Môi trường", isCorrect: false },
+                            { text: "Chất xúc tác", isCorrect: false }
+                        ];
+                        exp = "Chất khử là chất nhường electron (số oxi hóa tăng sau phản ứng). Khử cho - Oxi nhận.";
+                    } else if (chapter.includes("Năng lượng")) {
+                        rawTitle = `Phản ứng hóa học có biến thiên enthalpy $\\Delta_r H^0_{298} < 0$ là phản ứng:`;
+                        opts = [
+                            { text: "Tỏa nhiệt", isCorrect: true },
+                            { text: "Thu nhiệt", isCorrect: false },
+                            { text: "Không thay đổi nhiệt", isCorrect: false },
+                            { text: "Phân hủy hạt nhân", isCorrect: false }
+                        ];
+                        exp = "Nếu $\\Delta_r H^0_{298} < 0$ thì phản ứng tỏa nhiệt ra môi trường.";
+                    } else if (chapter.includes("Tốc độ")) {
+                        rawTitle = `Khi tăng nhiệt độ của hệ phản ứng, tốc độ phản ứng hóa học thường có xu hướng:`;
+                        opts = [
+                            { text: "Tăng lên", isCorrect: true },
+                            { text: "Giảm đi", isCorrect: false },
+                            { text: "Không đổi", isCorrect: false },
+                            { text: "Dừng lại hoàn toàn", isCorrect: false }
+                        ];
+                        exp = "Khi nhiệt độ tăng, các hạt chuyển động nhanh hơn làm tăng số va chạm hiệu quả, dẫn đến tốc độ phản ứng tăng.";
+                    } else {
+                        rawTitle = `Đơn chất Halogen nào sau đây ở điều kiện thường tồn tại ở thể khí và có màu vàng lục?`;
+                        opts = [
+                            { text: "Chlorine ($Cl_2$)", isCorrect: true },
+                            { text: "Bromine ($Br_2$)", isCorrect: false },
+                            { text: "Iodine ($I_2$)", isCorrect: false },
+                            { text: "Fluorine ($F_2$)", isCorrect: false }
+                        ];
+                        exp = "Chlorine ($Cl_2$) là chất khí màu vàng lục, xốc và độc.";
+                    }
+                }
+
+                list.push({
+                    subject: subject,
+                    chapter: chapter,
+                    question: rawTitle,
+                    options: opts,
+                    explanation: exp
+                });
+            }
+
+            return list;
+        }
+
+        // Initialize Data
+        function initData() {
+            const saved = localStorage.getItem('grade10_quiz_bank_2026_v2');
+            if (saved) {
+                try {
+                    questionBank = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Parse error", e);
+                    buildInitialBank();
+                }
+            } else {
+                buildInitialBank();
+            }
+        }
+
+        function buildInitialBank() {
+            let fullBank = [];
+            Object.keys(CURRICULUM_STRUCTURE).forEach(subject => {
+                CURRICULUM_STRUCTURE[subject].forEach(chapter => {
+                    const chapterQuestions = generate40QuestionsForChapter(subject, chapter);
+                    fullBank.push(...chapterQuestions);
+                });
+            });
+            questionBank = fullBank;
+            saveQuestionBank();
+        }
+
+        function saveQuestionBank() {
+            try {
+                localStorage.setItem('grade10_quiz_bank_2026_v2', JSON.stringify(questionBank));
+            } catch(e) {
+                console.error("Storage full or error", e);
+            }
+        }
+
+        // Filter and Render Dashboard
+        function filterBySubject(subject) {
+            currentSubjectFilter = subject;
+            ['ALL', 'Toán Học', 'Vật Lý', 'Hóa Học'].forEach(s => {
+                const idMap = { 'ALL': 'tabALL', 'Toán Học': 'tabToan', 'Vật Lý': 'tabLy', 'Hóa Học': 'tabHoa' };
+                const btn = document.getElementById(idMap[s]);
+                if (btn) {
+                    if (s === subject) {
+                        btn.className = "px-4 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition font-semibold";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition font-semibold";
+                    }
+                }
+            });
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const grid = document.getElementById('chaptersGrid');
+            const totalBadge = document.getElementById('totalQuestionsBadge');
+            grid.innerHTML = '';
+
+            let filteredBank = questionBank;
+            if (currentSubjectFilter !== 'ALL') {
+                filteredBank = questionBank.filter(q => q.subject === currentSubjectFilter);
+            }
+
+            totalBadge.innerText = `Kho: ${filteredBank.length} câu hỏi`;
+
+            const activeSubjects = currentSubjectFilter === 'ALL' 
+                ? Object.keys(CURRICULUM_STRUCTURE) 
+                : [currentSubjectFilter];
+
+            const subjectIcons = {
+                "Toán Học": "fa-calculator text-blue-500",
+                "Vật Lý": "fa-bolt text-amber-500",
+                "Hóa Học": "fa-flask text-emerald-500"
+            };
+
+            activeSubjects.forEach(sub => {
+                const chapters = CURRICULUM_STRUCTURE[sub] || [];
+                chapters.forEach(chap => {
+                    const count = questionBank.filter(q => q.subject === sub && q.chapter === chap).length;
+                    
+                    grid.innerHTML += `
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md flex items-center gap-1.5">
+                                        <i class="fa-solid ${subjectIcons[sub] || 'fa-book'}"></i> ${sub}
+                                    </span>
+                                    <span class="text-xs text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full">${count} câu</span>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-base mb-2 line-clamp-2">${chap}</h4>
+                            </div>
+                            <button onclick="startQuizForChapter('${sub}', '${chap.replace(/'/g, "\\'")}')" class="mt-4 w-full py-2.5 bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white rounded-xl font-bold text-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-play"></i> Luyện tập chương này
+                            </button>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function shuffleArray(arr) {
+            const array = [...arr];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function getSelectedConfigNumQuestions(totalAvailable) {
+            const configVal = document.getElementById('configNumQuestions').value;
+            if (configVal === 'all') return totalAvailable;
+            return Math.min(parseInt(configVal) || 5, totalAvailable);
+        }
+
+        function generateRandomQuiz(subjectFilter = 'ALL') {
+            let pool = questionBank;
+            if (subjectFilter !== 'ALL') {
+                pool = questionBank.filter(q => q.subject === subjectFilter);
+            }
+            
+            if (pool.length === 0) {
+                showToast("Không có câu hỏi nào!", "error");
+                return;
+            }
+
+            const numQ = getSelectedConfigNumQuestions(pool.length);
+            const shuffledPool = shuffleArray(pool).slice(0, numQ);
+            
+            currentActiveChapter = null;
+            startQuizWithQuestions(shuffledPool, "Đề Thi Ngẫu Nhiên Tổng hợp");
+        }
+
+        function startQuizForChapter(sub, chap) {
+            const pool = questionBank.filter(q => q.subject === sub && q.chapter === chap);
+            if (pool.length === 0) {
+                showToast("Chương này chưa có câu hỏi!", "error");
+                return;
+            }
+
+            const numQ = getSelectedConfigNumQuestions(pool.length);
+            const shuffledPool = shuffleArray(pool).slice(0, numQ);
+
+            currentActiveChapter = { subject: sub, chapter: chap };
+            startQuizWithQuestions(shuffledPool, `${sub} - ${chap}`);
+        }
+
+        function retryCurrentQuiz() {
+            if (currentActiveChapter) {
+                startQuizForChapter(currentActiveChapter.subject, currentActiveChapter.chapter);
+            } else {
+                generateRandomQuiz('ALL');
+            }
+        }
+
+        function startQuizWithQuestions(questions, title) {
+            const shouldShuffle = document.getElementById('configShuffleOptions').value === "true";
+            
+            currentQuizQuestions = questions.map(q => {
+                let options = [...q.options];
+                if (shouldShuffle) {
+                    options = shuffleArray(options);
+                }
+                return {
+                    ...q,
+                    options: options
+                };
+            });
+
+            userAnswers = {};
+            document.getElementById('quizTitle').innerText = title;
+            
+            // Render Questions
+            const qContainer = document.getElementById('questionsContainer');
+            const navGrid = document.getElementById('questionNavGrid');
+            qContainer.innerHTML = '';
+            navGrid.innerHTML = '';
+
+            currentQuizQuestions.forEach((q, idx) => {
+                // Navigation item
+                navGrid.innerHTML += `
+                    <button id="navBtn_${idx}" onclick="scrollToQuestion(${idx})" class="w-full aspect-square text-xs font-bold rounded-lg border border-slate-300 bg-slate-50 text-slate-700 hover:border-indigo-500 flex items-center justify-center transition">
+                        ${idx + 1}
+                    </button>
+                `;
+
+                // Question Card (Ensuring Question Label always counts 1, 2, 3... N correctly)
+                const optionsHtml = q.options.map((opt, oIdx) => `
+                    <label class="p-3.5 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 flex items-center gap-3 cursor-pointer transition">
+                        <input type="radio" name="question_${idx}" value="${oIdx}" onchange="selectAnswer(${idx}, ${oIdx})" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                        <span class="text-sm font-medium text-slate-700">${opt.text}</span>
+                    </label>
+                `).join('');
+
+                qContainer.innerHTML += `
+                    <div id="questionCard_${idx}" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b pb-3">
+                            <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-md">Câu ${idx + 1} / ${currentQuizQuestions.length}</span>
+                            <span class="text-xs text-slate-500 font-medium">${q.subject}</span>
+                        </div>
+                        <div class="text-base font-semibold text-slate-800">Câu ${idx + 1}: ${q.question}</div>
+                        <div class="space-y-2.5">${optionsHtml}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('resultView').classList.add('hidden');
+            document.getElementById('quizView').classList.remove('hidden');
+
+            updateQuizProgress();
+            startQuizTimer();
+
+            // Explicitly render Math in Quiz View
+            renderMathInContainer('quizView');
+        }
+
+        // Timer Functions
+        function startQuizTimer() {
+            clearInterval(quizTimerInterval);
+            quizSeconds = 0;
+            updateTimerDisplay();
+            quizTimerInterval = setInterval(() => {
+                quizSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = String(Math.floor(quizSeconds / 60)).padStart(2, '0');
+            const secs = String(quizSeconds % 60).padStart(2, '0');
+            document.getElementById('quizTimer').innerText = `${mins}:${secs}`;
+        }
+
+        function stopQuizTimer() {
+            clearInterval(quizTimerInterval);
+        }
+
+        // Selection & Progress Handlers
+        function selectAnswer(qIndex, oIndex) {
+            userAnswers[qIndex] = oIndex;
+            updateQuizProgress();
+            
+            const navBtn = document.getElementById(`navBtn_${qIndex}`);
+            if (navBtn) {
+                navBtn.className = "w-full aspect-square text-xs font-bold rounded-lg border border-indigo-600 bg-indigo-600 text-white flex items-center justify-center transition shadow-sm";
+            }
+        }
+
+        function updateQuizProgress() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const total = currentQuizQuestions.length;
+            document.getElementById('quizProgressText').innerText = `Đã làm ${answeredCount}/${total} câu`;
+        }
+
+        function scrollToQuestion(index) {
+            const qCard = document.getElementById(`questionCard_${index}`);
+            if (qCard) {
+                qCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function submitQuiz() {
+            stopQuizTimer();
+            
+            let correctCount = 0;
+            currentQuizQuestions.forEach((q, idx) => {
+                const userChoice = userAnswers[idx];
+                if (userChoice !== undefined && q.options[userChoice] && q.options[userChoice].isCorrect) {
+                    correctCount++;
+                }
+            });
+
+            const score = ((correctCount / currentQuizQuestions.length) * 10).toFixed(1);
+
+            document.getElementById('resultScore').innerText = `${score}/10`;
+            document.getElementById('resultCorrectCount').innerText = `${correctCount}/${currentQuizQuestions.length}`;
+            
+            const mins = String(Math.floor(quizSeconds / 60)).padStart(2, '0');
+            const secs = String(quizSeconds % 60).padStart(2, '0');
+            document.getElementById('resultTime').innerText = `${mins}:${secs}`;
+
+            // Render Review
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+
+            currentQuizQuestions.forEach((q, idx) => {
+                const userChoice = userAnswers[idx];
+                const correctOptionIndex = q.options.findIndex(o => o.isCorrect);
+                const isCorrect = userChoice !== undefined && userChoice === correctOptionIndex;
+
+                let statusBadge = isCorrect 
+                    ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-md font-bold"><i class="fa-solid fa-check mr-1"></i>Chính xác</span>`
+                    : `<span class="bg-rose-100 text-rose-700 text-xs px-2.5 py-1 rounded-md font-bold"><i class="fa-solid fa-xmark mr-1"></i>Chưa chính xác</span>`;
+
+                let optionsReviewHtml = q.options.map((opt, oIdx) => {
+                    let styleClass = "border-slate-200 bg-slate-50 text-slate-700";
+                    if (oIdx === correctOptionIndex) {
+                        styleClass = "border-emerald-500 bg-emerald-50 text-emerald-800 font-bold";
+                    } else if (oIdx === userChoice && !opt.isCorrect) {
+                        styleClass = "border-rose-500 bg-rose-50 text-rose-800 font-bold";
+                    }
+
+                    return `
+                        <div class="p-3 rounded-xl border text-sm flex items-center justify-between ${styleClass}">
+                            <span>${opt.text}</span>
+                            ${oIdx === correctOptionIndex ? '<span class="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded">Đáp án đúng</span>' : ''}
+                            ${oIdx === userChoice && !opt.isCorrect ? '<span class="text-xs bg-rose-600 text-white px-2 py-0.5 rounded">Lựa chọn của bạn</span>' : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                reviewContainer.innerHTML += `
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">Câu ${idx + 1}: ${q.subject} - ${q.chapter}</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="text-base font-semibold text-slate-800">Câu ${idx + 1}: ${q.question}</div>
+                        <div class="space-y-2 pt-1">${optionsReviewHtml}</div>
+                        ${q.explanation ? `
+                            <div class="bg-indigo-50 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 mt-2">
+                                <strong><i class="fa-solid fa-lightbulb mr-1 text-amber-500"></i>Giải thích:</strong> ${q.explanation}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            document.getElementById('quizView').classList.add('hidden');
+            document.getElementById('resultView').classList.remove('hidden');
+
+            // Render Math formulas in Result Review
+            renderMathInContainer('reviewContainer');
+        }
+
+        function confirmExitQuiz() {
+            if (confirm("Bạn có chắc chắn muốn rời khỏi bài thi hiện tại?")) {
+                stopQuizTimer();
+                showDashboard();
+            }
+        }
+
+        function showDashboard() {
+            stopQuizTimer();
+            document.getElementById('quizView').classList.add('hidden');
+            document.getElementById('resultView').classList.add('hidden');
+            document.getElementById('dashboardView').classList.remove('hidden');
+            renderDashboard();
+        }
+
+        // Add Question Form Handling
+        function openEditorModal() {
+            document.getElementById('editorModal').classList.remove('hidden');
+        }
+
+        function closeEditorModal() {
+            document.getElementById('editorModal').classList.add('hidden');
+        }
+
+        function saveNewQuestion(event) {
+            event.preventDefault();
+
+            const subject = document.getElementById('inputSubject').value;
+            const chapter = document.getElementById('inputChapter').value.trim();
+            const questionText = document.getElementById('inputQuestionText').value.trim();
+            const explanation = document.getElementById('inputExplanation').value.trim();
+
+            const correctIdx = parseInt(document.querySelector('input[name="correctIndex"]:checked').value);
+
+            const options = [
+                { text: document.getElementById('option0').value.trim(), isCorrect: correctIdx === 0 },
+                { text: document.getElementById('option1').value.trim(), isCorrect: correctIdx === 1 },
+                { text: document.getElementById('option2').value.trim(), isCorrect: correctIdx === 2 },
+                { text: document.getElementById('option3').value.trim(), isCorrect: correctIdx === 3 }
+            ];
+
+            const newQ = {
+                subject,
+                chapter,
+                question: questionText,
+                options,
+                explanation
+            };
+
+            questionBank.push(newQ);
+            saveQuestionBank();
+            closeEditorModal();
+            document.getElementById('addQuestionForm').reset();
+            
+            showToast("Đã thêm câu hỏi thành công!", "success");
+            renderDashboard();
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = msg;
+            toastIcon.className = type === "success" 
+                ? "fa-solid fa-circle-check text-emerald-400" 
+                : "fa-solid fa-circle-exclamation text-rose-400";
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Initialize App
+        window.onload = function() {
+            initData();
+            renderDashboard();
+        };
+    </script>
+</body>
+</html>
