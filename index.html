@@ -1,977 +1,650 @@
+<!-- title: Ôn Tập Toán Lý Hóa 10 Đa Dạng Dạng Bài (Trắc Nghiệm, Đúng/Sai, Tự Luận) -->
+<!-- filepath: index.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Đề Thi Trắc Nghiệm Ngẫu Nhiên - Lớp 10</title>
+    <title>Ngân Hàng Ôn Tập Toán - Lý - Hóa 10 (Chương Trình 2026)</title>
+    
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- KaTeX for Math rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- KaTeX CSS & JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .katex-display { margin: 0.5em 0; }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="min-h-screen text-slate-800 flex flex-col">
 
-    <!-- Header Navigation -->
-    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showDashboard()">
-                <div class="bg-white text-indigo-600 p-2 rounded-lg font-bold text-xl shadow-sm">
-                    <i class="fa-solid fa-graduation-cap"></i>
+    <!-- Header Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showDashboard()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-black text-xl shadow-md">
+                    10
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight">Quiz Grade 10 (2026)</h1>
-                    <p class="text-xs text-indigo-200">Trắc nghiệm Toán - Lý - Hóa Lớp 10 theo chương</p>
+                    <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Ôn Tập Toán - Lý - Hóa 10</h1>
+                    <p class="text-xs text-slate-500 font-medium">Trắc Nghiệm • Đúng/Sai • Tự Luận / Trả Lời Ngắn</p>
                 </div>
             </div>
-            
-            <div class="flex items-center space-x-3">
-                <button onclick="showDashboard()" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition flex items-center gap-2">
-                    <i class="fa-solid fa-house"></i> <span class="hidden sm:inline">Trang chủ</span>
-                </button>
-                <button onclick="openEditorModal()" class="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-400 text-white rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Thêm câu hỏi</span>
+
+            <div class="flex items-center gap-3">
+                <button onclick="showDashboard()" class="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition flex items-center gap-2 cursor-pointer">
+                    <i data-lucide="home" class="w-4 h-4"></i> Trang chủ
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Main Content Dynamic Container -->
+    <main id="main-content" class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
+        <!-- Dashboard / Quiz / Result views dynamically rendered here -->
+    </main>
 
-        <!-- DASHBOARD VIEW -->
-        <div id="dashboardView" class="space-y-8">
-            <!-- Hero Banner -->
-            <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 sm:p-10 text-white shadow-md relative overflow-hidden">
-                <div class="relative z-10 max-w-2xl">
-                    <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider mb-2 inline-block">Chương trình Mới 2026</span>
-                    <h2 class="text-2xl sm:text-3xl font-bold mb-3">Ôn tập & Kiểm tra Trắc nghiệm Lớp 10</h2>
-                    <p class="text-indigo-100 text-sm sm:text-base mb-6">
-                        Chọn một chương cụ thể bên dưới để ôn luyện ngay, hoặc bấm tạo đề ngẫu nhiên tổng hợp từ toàn bộ ngân hàng câu hỏi!
-                    </p>
-                    <div class="flex flex-wrap gap-3">
-                        <button onclick="generateRandomQuiz('ALL')" class="bg-white text-indigo-700 hover:bg-indigo-50 font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
-                            <i class="fa-solid fa-shuffle text-indigo-500"></i> Tạo đề tổng hợp ngẫu nhiên
+    <!-- Modal cấu hình độ khó & số câu trước khi làm bài -->
+    <div id="quiz-config-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 flex flex-col gap-5 border border-slate-100">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 id="modal-chapter-title" class="text-lg font-bold text-slate-900">Tùy Chọn Đề Kiểm Tra</h3>
+                    <p id="modal-subject-subtitle" class="text-xs text-slate-500 font-medium mt-0.5">Môn học & Chương</p>
+                </div>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Chọn độ khó -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Chọn Độ Khó:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="selectDifficulty('all')" id="diff-btn-all" class="diff-option px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-indigo-600 bg-indigo-50 text-indigo-700 cursor-pointer">
+                            <i data-lucide="layers" class="w-3.5 h-3.5"></i> Tất cả độ khó
+                        </button>
+                        <button type="button" onclick="selectDifficulty('easy')" id="diff-btn-easy" class="diff-option px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">
+                            <span class="w-2 h-2 rounded-full bg-sky-500"></span> Nhận biết (Dễ)
+                        </button>
+                        <button type="button" onclick="selectDifficulty('medium')" id="diff-btn-medium" class="diff-option px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Thông hiểu (TB)
+                        </button>
+                        <button type="button" onclick="selectDifficulty('hard')" id="diff-btn-hard" class="diff-option px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Vận dụng (Khó)
+                        </button>
+                        <button type="button" onclick="selectDifficulty('expert')" id="diff-btn-expert" class="diff-option col-span-2 px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">
+                            <span class="w-2 h-2 rounded-full bg-rose-500"></span> Vận dụng cao (Rất khó)
                         </button>
                     </div>
                 </div>
-                <i class="fa-solid fa-atom absolute right-4 -bottom-6 text-9xl text-white/10 pointer-events-none hidden md:block"></i>
-            </div>
 
-            <!-- Settings / Config Section -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-indigo-600"></i> Cấu hình bài làm
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Số lượng câu hỏi mỗi bài test</label>
-                        <select id="configNumQuestions" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                            <option value="5" selected>5 câu (Ôn nhanh)</option>
-                            <option value="10">10 câu (Kiểm tra 15p)</option>
-                            <option value="15">15 câu (Đề tổng hợp)</option>
-                            <option value="20">20 câu (Luyện tập sâu)</option>
-                            <option value="all">Tất cả câu trong chương</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Chế độ xáo trộn</label>
-                        <select id="configShuffleOptions" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                            <option value="true" selected>Xáo trộn thứ tự câu & đáp án</option>
-                            <option value="false">Cố định thứ tự đáp án</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Filter Tabs for Subjects -->
-            <div>
-                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-                    <div class="flex gap-2 bg-slate-200 p-1.5 rounded-xl text-sm font-semibold">
-                        <button id="tabALL" onclick="filterBySubject('ALL')" class="px-4 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition">Tất cả môn</button>
-                        <button id="tabToan" onclick="filterBySubject('Toán Học')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">Toán 10</button>
-                        <button id="tabLy" onclick="filterBySubject('Vật Lý')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">Vật Lý 10</button>
-                        <button id="tabHoa" onclick="filterBySubject('Hóa Học')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">Hóa Học 10</button>
-                    </div>
-                    <span id="totalQuestionsBadge" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full font-semibold">
-                        Kho: 0 câu hỏi
-                    </span>
-                </div>
-
-                <div id="chaptersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Dynamic Chapter Cards Will Be Inserted Here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- QUIZ ACTIVE VIEW -->
-        <div id="quizView" class="hidden space-y-6">
-            <!-- Quiz Top Bar -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4 sticky top-20 z-40">
-                <div class="flex items-center gap-3">
-                    <button onclick="confirmExitQuiz()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-100 transition">
-                        <i class="fa-solid fa-arrow-left text-lg"></i>
-                    </button>
-                    <div>
-                        <h2 id="quizTitle" class="font-bold text-slate-800 text-base sm:text-lg">Bài kiểm tra</h2>
-                        <span id="quizProgressText" class="text-xs text-slate-500">Đã làm 0/0 câu</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg font-mono font-bold text-sm">
-                        <i class="fa-regular fa-clock"></i>
-                        <span id="quizTimer">00:00</span>
-                    </div>
-                    <button onclick="submitQuiz()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2 rounded-lg shadow-sm transition text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-check"></i> Nộp bài
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Question List Container -->
-                <div class="lg:col-span-3 space-y-6" id="questionsContainer">
-                    <!-- Dynamic Question Cards -->
-                </div>
-
-                <!-- Quick Navigation Sidebar -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm sticky top-40 space-y-4">
-                        <h4 class="font-bold text-sm text-slate-700 border-b pb-2">Danh sách câu hỏi</h4>
-                        <div id="questionNavGrid" class="grid grid-cols-5 gap-2">
-                            <!-- Nav Buttons Dynamic -->
-                        </div>
-                        <div class="pt-2 text-xs text-slate-500 space-y-1">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-indigo-600 rounded-sm inline-block"></span> Đã chọn</div>
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-slate-100 border border-slate-300 rounded-sm inline-block"></span> Chưa làm</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RESULT VIEW -->
-        <div id="resultView" class="hidden space-y-6 max-w-3xl mx-auto">
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-md text-center space-y-6">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full text-3xl">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
-                
+                <!-- Chọn số lượng câu hỏi (10, 20, 30 câu) -->
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-800">Hoàn thành bài ôn tập!</h2>
-                    <p class="text-slate-500 text-sm mt-1">Dưới đây là kết quả bài làm của bạn</p>
-                </div>
-
-                <div class="grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl">
-                    <div class="p-2">
-                        <span class="block text-xs text-slate-500 uppercase font-semibold">Điểm số</span>
-                        <span id="resultScore" class="text-2xl sm:text-3xl font-extrabold text-indigo-600">0/10</span>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Số Lượng Câu Hỏi Kiểm Tra:</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="selectCount(10)" id="count-btn-10" class="count-option px-3 py-2 rounded-xl border text-xs font-bold text-center border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">10 Câu</button>
+                        <button type="button" onclick="selectCount(20)" id="count-btn-20" class="count-option px-3 py-2 rounded-xl border text-xs font-bold text-center border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">20 Câu</button>
+                        <button type="button" onclick="selectCount(30)" id="count-btn-30" class="count-option px-3 py-2 rounded-xl border text-xs font-bold text-center border-indigo-600 bg-indigo-50 text-indigo-700 cursor-pointer">30 Câu</button>
                     </div>
-                    <div class="p-2 border-x border-slate-200">
-                        <span class="block text-xs text-slate-500 uppercase font-semibold">Số câu đúng</span>
-                        <span id="resultCorrectCount" class="text-2xl sm:text-3xl font-extrabold text-emerald-600">0</span>
-                    </div>
-                    <div class="p-2">
-                        <span class="block text-xs text-slate-500 uppercase font-semibold">Thời gian</span>
-                        <span id="resultTime" class="text-2xl sm:text-3xl font-extrabold text-slate-700">00:00</span>
-                    </div>
-                </div>
-
-                <div class="flex justify-center gap-4 pt-2">
-                    <button onclick="retryCurrentQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2.5 rounded-xl transition flex items-center gap-2 shadow">
-                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài này
-                    </button>
-                    <button onclick="showDashboard()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-6 py-2.5 rounded-xl transition">
-                        Về trang chủ
-                    </button>
                 </div>
             </div>
 
-            <!-- Detailed Answer Review -->
-            <div class="space-y-4">
-                <h3 class="font-bold text-lg text-slate-800">Chi tiết đáp án & Lời giải</h3>
-                <div id="reviewContainer" class="space-y-4">
-                    <!-- Dynamic Answer Review Cards -->
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- ADD QUESTION MODAL -->
-    <div id="editorModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 bg-indigo-600 text-white flex justify-between items-center">
-                <h3 class="font-bold text-lg"><i class="fa-solid fa-plus-circle mr-2"></i>Thêm câu hỏi mới</h3>
-                <button onclick="closeEditorModal()" class="text-white/80 hover:text-white p-1"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            
-            <form id="addQuestionForm" onsubmit="saveNewQuestion(event)" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Môn học</label>
-                        <select id="inputSubject" required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                            <option value="Toán Học">Toán Học</option>
-                            <option value="Vật Lý">Vật Lý</option>
-                            <option value="Hóa Học">Hóa Học</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Chương học</label>
-                        <input type="text" id="inputChapter" placeholder="VD: Chương 1..." required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nội dung câu hỏi ($...$ cho công thức)</label>
-                    <textarea id="inputQuestionText" rows="3" placeholder="Nhập câu hỏi tại đây..." required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="block text-xs font-bold text-slate-600 uppercase">Các đáp án lựa chọn</label>
-                    
-                    <div class="flex items-center gap-2">
-                        <input type="radio" name="correctIndex" value="0" checked class="text-indigo-600 focus:ring-indigo-500">
-                        <input type="text" id="option0" placeholder="Đáp án A" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
-                    </div>
-                    
-                    <div class="flex items-center gap-2">
-                        <input type="radio" name="correctIndex" value="1" class="text-indigo-600 focus:ring-indigo-500">
-                        <input type="text" id="option1" placeholder="Đáp án B" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <input type="radio" name="correctIndex" value="2" class="text-indigo-600 focus:ring-indigo-500">
-                        <input type="text" id="option2" placeholder="Đáp án C" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <input type="radio" name="correctIndex" value="3" class="text-indigo-600 focus:ring-indigo-500">
-                        <input type="text" id="option3" placeholder="Đáp án D" required class="flex-grow bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Giải thích chi tiết (Tùy chọn)</label>
-                    <textarea id="inputExplanation" rows="2" placeholder="Nhập lời giải..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                </div>
-
-                <div class="pt-2 flex justify-end gap-3 border-t">
-                    <button type="button" onclick="closeEditorModal()" class="px-4 py-2 text-sm text-slate-600 font-medium hover:bg-slate-100 rounded-lg">Hủy</button>
-                    <button type="submit" class="px-5 py-2 text-sm bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-500 transition shadow">Lưu câu hỏi</button>
-                </div>
-            </form>
+            <button onclick="startQuizWithConfig()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm mt-2 cursor-pointer">
+                <i data-lucide="play" class="w-4 h-4 fill-white"></i> Bắt Đầu Làm Bài
+            </button>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50 pointer-events-none">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toastMsg" class="text-sm">Thông báo</span>
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- App JavaScript Logic -->
     <script>
-        // Global variables state
-        let questionBank = [];
-        let currentQuizQuestions = [];
-        let userAnswers = {};
-        let quizTimerInterval = null;
-        let quizSeconds = 0;
-        let currentSubjectFilter = 'ALL';
-        let currentActiveChapter = null;
-
-        // Helper to trigger KaTeX math rendering
-        function renderMathInContainer(elementId) {
-            setTimeout(() => {
-                const el = document.getElementById(elementId);
-                if (el && window.renderMathInElement) {
-                    window.renderMathInElement(el, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false},
-                            {left: '\\(', right: '\\)', display: false},
-                            {left: '\\[', right: '\\]', display: true}
-                        ],
-                        throwOnError: false
-                    });
-                }
-            }, 30);
-        }
-
-        // Full Grade 10 Curriculum Structure Definition
-        const CURRICULUM_STRUCTURE = {
-            "Toán Học": [
-                "Chương 1: Mệnh đề & Tập hợp",
-                "Chương 2: Bất phương trình & Hệ BPT bậc nhất hai ẩn",
-                "Chương 3: Hàm số bậc hai & Đồ thị",
-                "Chương 4: Hệ thức lượng trong tam giác",
-                "Chương 5: Véctơ & Các phép toán",
-                "Chương 6: Thống kê & Xác suất",
-                "Chương 7: Phương pháp tọa độ trong mặt phẳng"
-            ],
-            "Vật Lý": [
-                "Chương 1: Mở đầu & Động học (Mô tả chuyển động)",
-                "Chương 2: Động lực học (Các định luật Newton & Lực)",
-                "Chương 3: Năng lượng, Công & Công suất",
-                "Chương 4: Động lượng & Va chạm",
-                "Chương 5: Chuyển động tròn & Biến dạng của vật rắn"
-            ],
-            "Hóa Học": [
-                "Chương 1: Cấu tạo Nguyên tử",
-                "Chương 2: Bảng tuần hoàn các nguyên tố hóa học",
-                "Chương 3: Liên kết hóa học",
-                "Chương 4: Phản ứng Oxi hóa - Khử",
-                "Chương 5: Năng lượng hóa học (Enthalpy)",
-                "Chương 6: Tốc độ phản ứng hóa học",
-                "Chương 7: Nguyên tố Nhóm Halogen"
-            ]
+        // Data Structure for Subjects & Chapters
+        const subjectsData = {
+            math: {
+                id: 'math', name: 'Toán Học 10', icon: 'calculator', color: 'indigo',
+                chapters: [
+                    { id: 'm1', title: 'Chương 1: Mệnh đề & Tập hợp' },
+                    { id: 'm2', title: 'Chương 2: Bất phương trình & Hệ BPT bậc nhất 2 ẩn' },
+                    { id: 'm3', title: 'Chương 3: Hàm số bậc hai & Đồ thị' },
+                    { id: 'm4', title: 'Chương 4: Hệ thức lượng trong tam giác' },
+                    { id: 'm5', title: 'Chương 5: Vectơ & Các phép toán' },
+                    { id: 'm6', title: 'Chương 6: Các số đặc trưng của mẫu số liệu' },
+                    { id: 'm7', title: 'Chương 7: Phương pháp tọa độ trong mặt phẳng' }
+                ]
+            },
+            physics: {
+                id: 'physics', name: 'Vật Lý 10', icon: 'zap', color: 'cyan',
+                chapters: [
+                    { id: 'p1', title: 'Chương 1: Mở đầu & Sai số trong đo lường' },
+                    { id: 'p2', title: 'Chương 2: Mô tả chuyển động (Vận tốc, Gia tốc)' },
+                    { id: 'p3', title: 'Chương 3: Chuyển động biến đổi đều & Rơi tự do' },
+                    { id: 'p4', title: 'Chương 4: Ba định luật Newton & Các lực cơ học' },
+                    { id: 'p5', title: 'Chương 5: Năng lượng, Công & Công suất' },
+                    { id: 'p6', title: 'Chương 6: Động lượng & Định luật bảo toàn động lượng' },
+                    { id: 'p7', title: 'Chương 7: Chuyển động tròn đều & Lực hướng tâm' }
+                ]
+            },
+            chemistry: {
+                id: 'chemistry', name: 'Hóa Học 10', icon: 'flask-conical', color: 'emerald',
+                chapters: [
+                    { id: 'c1', title: 'Chương 1: Cấu tạo nguyên tử' },
+                    { id: 'c2', title: 'Chương 2: Bảng tuần hoàn các nguyên tố hóa học' },
+                    { id: 'c3', title: 'Chương 3: Liên kết hóa học (Ion & Cộng hóa trị)' },
+                    { id: 'c4', title: 'Chương 4: Phản ứng Oxi hóa - Khử' },
+                    { id: 'c5', title: 'Chương 5: Năng lượng hóa học (Enthalpy)' },
+                    { id: 'c6', title: 'Chương 6: Tốc độ phản ứng hóa học' },
+                    { id: 'c7', title: 'Chương 7: Nhóm Halogen' }
+                ]
+            }
         };
 
-        // Generates 40 rich, distinct questions for a specific chapter
-        function generate40QuestionsForChapter(subject, chapter) {
-            const list = [];
-            
-            for (let i = 1; i <= 40; i++) {
-                let rawTitle = "", opts = [], exp = "";
+        // Difficulty metadata dictionary
+        const difficultyMeta = {
+            easy: { label: 'Nhận biết', bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200' },
+            medium: { label: 'Thông hiểu', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
+            hard: { label: 'Vận dụng', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
+            expert: { label: 'Vận dụng cao', bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200' }
+        };
 
-                if (subject === "Toán Học") {
-                    if (chapter.includes("Mệnh đề")) {
-                        const val = i * 2;
-                        rawTitle = `Cho tập hợp $A = \\{x \\in \\mathbb{R} \\mid x^2 - ${val * val} = 0\\}$. Tìm số phần tử của $A$.`;
-                        opts = [
-                            { text: `2 phần tử (là $\\pm ${val}$)`, isCorrect: true },
-                            { text: "1 phần tử", isCorrect: false },
-                            { text: "0 phần tử", isCorrect: false },
-                            { text: "4 phần tử", isCorrect: false }
-                        ];
-                        exp = `Phương trình $x^2 - ${val * val} = 0 \\Leftrightarrow x = \\pm ${val}$. Vậy $A = \\{-${val}, ${val}\\}$ có 2 phần tử.`;
-                    } else if (chapter.includes("Bất phương trình")) {
-                        rawTitle = `Miền nghiệm của bất phương trình $${i}x + y - ${i+2} < 0$ chứa điểm nào sau đây?`;
-                        opts = [
-                            { text: "$(0, 0)$", isCorrect: true },
-                            { text: `($${i+2}, 5$)`, isCorrect: false },
-                            { text: `($${i+5}, 10$)`, isCorrect: false },
-                            { text: `($${i+10}, 0$)`, isCorrect: false }
-                        ];
-                        exp = `Thay $(0,0)$ vào BPT: $${i}(0) + 0 - ${i+2} = -${i+2} < 0$ (Đúng).`;
-                    } else if (chapter.includes("Hàm số")) {
-                        rawTitle = `Tọa độ hoành độ đỉnh $x_I$ của parabol $y = x^2 - ${2*i}x + ${i}$ là:`;
-                        opts = [
-                            { text: `$x_I = ${i}$`, isCorrect: true },
-                            { text: `$x_I = -${i}$`, isCorrect: false },
-                            { text: `$x_I = ${2*i}$`, isCorrect: false },
-                            { text: "$x_I = 0$", isCorrect: false }
-                        ];
-                        exp = `Hoành độ đỉnh $x_I = -\\frac{b}{2a} = -\\frac{-${2*i}}{2(1)} = ${i}$.`;
-                    } else if (chapter.includes("Hệ thức lượng")) {
-                        rawTitle = `Trong tam giác $ABC$, diện tích $S$ được tính theo công thức nào sau đây?`;
-                        opts = [
-                            { text: "$S = \\frac{1}{2}ab \\sin C$", isCorrect: true },
-                            { text: "$S = \\frac{1}{2}ab \\cos C$", isCorrect: false },
-                            { text: "$S = ab \\sin C$", isCorrect: false },
-                            { text: "$S = \\frac{1}{2}abc$", isCorrect: false }
-                        ];
-                        exp = "Công thức tính diện tích tam giác theo 2 cạnh và góc kẹp giữa là $S = \\frac{1}{2}ab \\sin C$.";
-                    } else if (chapter.includes("Véctơ")) {
-                        rawTitle = `Cho 3 điểm $A, B, C$ bất kỳ. Kết quả của phép toán $\\vec{AB} + \\vec{BC}$ là:`;
-                        opts = [
-                            { text: "$\\vec{AC}$", isCorrect: true },
-                            { text: "$\\vec{CA}$", isCorrect: false },
-                            { text: "$\\vec{CB}$", isCorrect: false },
-                            { text: "$\\vec{0}$", isCorrect: false }
-                        ];
-                        exp = "Theo quy tắc 3 điểm của phép cộng véctơ: $\\vec{AB} + \\vec{BC} = \\vec{AC}$.";
-                    } else if (chapter.includes("Thống kê")) {
-                        const avg = (i + (i+2) + (i+4) + (i+6)) / 4;
-                        rawTitle = `Số trung bình cộng của dãy số dữ liệu $\\{${i}, ${i+2}, ${i+4}, ${i+6}\\}$ là:`;
-                        opts = [
-                            { text: `$${avg}$`, isCorrect: true },
-                            { text: `$${avg + 1}$`, isCorrect: false },
-                            { text: `$${avg - 1}$`, isCorrect: false },
-                            { text: `$${avg + 2}$`, isCorrect: false }
-                        ];
-                        exp = `Trung bình cộng $\\bar{x} = \\frac{${i} + ${i+2} + ${i+4} + ${i+6}}{4} = ${avg}$.`;
+        // Question Type Labels
+        const typeMeta = {
+            mc: { label: 'Trắc nghiệm A,B,C,D', bg: 'bg-indigo-50', text: 'text-indigo-700' },
+            tf: { label: 'Đúng / Sai', bg: 'bg-purple-50', text: 'text-purple-700' },
+            essay: { label: 'Trả lời ngắn / Tự luận', bg: 'bg-amber-50', text: 'text-amber-700' }
+        };
+
+        // Generator functions with 3 Question Types (MC, True/False, Essay)
+        function generateQuestionsForChapter(subjectId, chapterId, count = 40) {
+            const list = [];
+            const diffs = ['easy', 'medium', 'hard', 'expert'];
+            const types = ['mc', 'tf', 'essay'];
+
+            for (let i = 1; i <= count; i++) {
+                const diff = diffs[(i - 1) % 4];
+                const type = types[(i - 1) % 3]; // Cycles between MCQ, T/F, and Essay
+                let qText = "", opts = [], correct = null, expl = "", keywords = [];
+
+                if (subjectId === 'math') {
+                    if (type === 'mc') {
+                        qText = `Cho tập hợp $A = \\{x \\in \\mathbb{R} \\mid x^2 - ${i * 4} = 0\\}$. Khẳng định nào sau đây đúng?`;
+                        opts = [`Tập $A$ có 2 phần tử $\\pm ${Math.sqrt(i * 4)}$`, "Tập $A = \\emptyset$", "Tập $A$ có 1 phần tử", "Tập $A$ có vô số phần tử"];
+                        correct = 0;
+                        expl = `Giải $x^2 - ${i * 4} = 0 \\iff x = \\pm ${Math.sqrt(i * 4)}$. Vậy $A$ có 2 phần tử.`;
+                    } else if (type === 'tf') {
+                        qText = `Cho hai tập hợp $A = [-2; ${i + 2}]$ và $B = (${i}; 10]$. Mệnh đề: "Giao của hai tập hợp là $A \\cap B = (${i}; ${i + 2}]$" là Đúng hay Sai?`;
+                        correct = true;
+                        expl = `Giao $A \\cap B$ lấy phần tử thuộc cả hai tập: $A \\cap B = (${i}; ${i + 2}]$. Khẳng định này là ĐÚNG.`;
                     } else {
-                        rawTitle = `Phương trình đường tròn tâm $O(0,0)$ bán kính $R = ${i}$ là:`;
-                        opts = [
-                            { text: `$x^2 + y^2 = ${i*i}$`, isCorrect: true },
-                            { text: `$x^2 + y^2 = ${i}$`, isCorrect: false },
-                            { text: `$x + y = ${i}$`, isCorrect: false },
-                            { text: `$x^2 - y^2 = ${i*i}$`, isCorrect: false }
-                        ];
-                        exp = `Phương trình đường tròn tâm $O(0,0)$ bán kính $R$ là $x^2 + y^2 = R^2 = ${i*i}$.`;
+                        qText = `Cho tam giác $ABC$ có $b = ${i + 3}$, $c = ${i + 5}$ và góc $\\widehat{A} = 60^\\circ$. Hãy tính $a^2$ và nhập kết quả số nguyên bên dưới.`;
+                        correct = `${(i + 3)**2 + (i + 5)**2 - (i + 3)*(i + 5)}`;
+                        keywords = [correct, `${(i + 3)**2 + (i + 5)**2 - (i + 3)*(i + 5)}`];
+                        expl = `Áp dụng định lý Côsin: $a^2 = b^2 + c^2 - 2bc \\cos 60^\\circ = ${i+3}^2 + ${i+5}^2 - ${i+3} \\cdot ${i+5} = ${correct}$.`;
                     }
-                } else if (subject === "Vật Lý") {
-                    if (chapter.includes("Mở đầu")) {
-                        const t = i, a = 2;
-                        const v = a * t;
-                        rawTitle = `Một vật chuyển động thẳng biến đổi đều từ trạng thái nghỉ ($v_0 = 0$) với gia tốc $a = 2\\text{ m/s}^2$. Vận tốc sau $t = ${t}\\text{ s}$ là:`;
-                        opts = [
-                            { text: `$${v}\\text{ m/s}$`, isCorrect: true },
-                            { text: `$${v+5}\\text{ m/s}$`, isCorrect: false },
-                            { text: `$${v*2}\\text{ m/s}$`, isCorrect: false },
-                            { text: `$${t}\\text{ m/s}$`, isCorrect: false }
-                        ];
-                        exp = `Áp dụng công thức $v = v_0 + at = 0 + 2 \\times ${t} = ${v}\\text{ m/s}$.`;
-                    } else if (chapter.includes("Động lực học")) {
-                        const m = i, a = 3;
-                        const F = m * a;
-                        rawTitle = `Tác dụng một lực $F$ vào vật khối lượng $m = ${m}\\text{ kg}$ làm vật thu gia tốc $a = 3\\text{ m/s}^2$. Độ lớn lực $F$ là:`;
-                        opts = [
-                            { text: `$${F}\\text{ N}$`, isCorrect: true },
-                            { text: `$${F+2}\\text{ N}$`, isCorrect: false },
-                            { text: `$${m+a}\\text{ N}$`, isCorrect: false },
-                            { text: `$${F*2}\\text{ N}$`, isCorrect: false }
-                        ];
-                        exp = `Theo Định luật II Newton: $F = m \\cdot a = ${m} \\times 3 = ${F}\\text{ N}$.`;
-                    } else if (chapter.includes("Năng lượng")) {
-                        const m = 2, v = i;
-                        const Wk = 0.5 * m * v * v;
-                        rawTitle = `Động năng của vật có khối lượng $m = 2\\text{ kg}$ chuyển động với vận tốc $v = ${v}\\text{ m/s}$ là:`;
-                        opts = [
-                            { text: `$${Wk}\\text{ J}$`, isCorrect: true },
-                            { text: `$${Wk*2}\\text{ J}$`, isCorrect: false },
-                            { text: `$${v}\\text{ J}$`, isCorrect: false },
-                            { text: `$${Wk + 10}\\text{ J}$`, isCorrect: false }
-                        ];
-                        exp = `Công thức động năng: $W_d = \\frac{1}{2} m v^2 = \\frac{1}{2} (2) (${v})^2 = ${Wk}\\text{ J}$.`;
-                    } else if (chapter.includes("Động lượng")) {
-                        const m = i, v = 4;
-                        const p = m * v;
-                        rawTitle = `Động lượng $p$ của một vật khối lượng $m = ${m}\\text{ kg}$ đang di chuyển với vận tốc $v = 4\\text{ m/s}$ là:`;
-                        opts = [
-                            { text: `$${p}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: true },
-                            { text: `$${p+4}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: false },
-                            { text: `$${m}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: false },
-                            { text: `$${p*2}\\text{ kg}\\cdot\\text{m/s}$`, isCorrect: false }
-                        ];
-                        exp = `Động lượng $p = m \\cdot v = ${m} \\times 4 = ${p}\\text{ kg}\\cdot\\text{m/s}$.`;
+                } else if (subjectId === 'physics') {
+                    if (type === 'mc') {
+                        qText = `Một vật chuyển động thẳng đều với vận tốc $v = ${i + 10}$ m/s. Quãng đường vật đi được sau $t = 5$ s là:`;
+                        opts = [`${(i + 10) * 5} m`, `${(i + 10) * 2} m`, `${i + 15} m`, `${(i + 10) / 5} m`];
+                        correct = 0;
+                        expl = `Công thức chuyển động thẳng đều: $s = v \\cdot t = ${(i + 10)} \\times 5 = ${(i + 10) * 5}$ m.`;
+                    } else if (type === 'tf') {
+                        qText = `Mệnh đề: "Trong chuyển động rơi tự do không vận tốc đầu, gia tốc $g = 9.8 \\text{ m/s}^2$ giảm dần theo thời gian" là Đúng hay Sai?`;
+                        correct = false;
+                        expl = `Gia tốc trọng trường $g$ tại một vị trí xác định là hằng số không đổi trong quá trình rơi. Mệnh đề này SAI.`;
                     } else {
-                        const v = i * 2;
-                        rawTitle = `Một vật chuyển động tròn đều với tốc độ góc $\\omega = ${i}\\text{ rad/s}$ trên bán kính $r = 2\\text{ m}$. Tốc độ dài $v$ là:`;
-                        opts = [
-                            { text: `$${v}\\text{ m/s}$`, isCorrect: true },
-                            { text: `$${i}\\text{ m/s}$`, isCorrect: false },
-                            { text: `$${v+2}\\text{ m/s}$`, isCorrect: false },
-                            { text: `$${v*2}\\text{ m/s}$`, isCorrect: false }
-                        ];
-                        exp = `Mối liên hệ giữa tốc độ dài và tốc độ góc: $v = \\omega \\cdot r = ${i} \\times 2 = ${v}\\text{ m/s}$.`;
+                        qText = `Một vật thả rơi tự do từ độ cao $h = ${i * 5}$ m. Lấy $g = 10 \\text{ m/s}^2$. Hãy tính thời gian rơi $t$ (giây).`;
+                        correct = Math.sqrt(i).toFixed(2);
+                        keywords = [`${Math.sqrt(i).toFixed(2)}`, `${Math.sqrt(i)}`];
+                        expl = `Thời gian rơi: $t = \\sqrt{\\frac{2h}{g}} = \\sqrt{\\frac{2 \\cdot ${i*5}}{10}} = \\sqrt{${i}} \\approx ${correct}$ s.`;
                     }
-                } else if (subject === "Hóa Học") {
-                    if (chapter.includes("Cấu tạo Nguyên tử")) {
-                        const Z = i;
-                        const A = 2 * Z + 1;
-                        rawTitle = `Nguyên tử nguyên tố $X$ có $Z = ${Z}$ và số khối $A = ${A}$. Số hạt neutron của nguyên tử này là:`;
-                        opts = [
-                            { text: `$${A - Z}$`, isCorrect: true },
-                            { text: `$${Z}$`, isCorrect: false },
-                            { text: `$${A}$`, isCorrect: false },
-                            { text: `$${A + Z}$`, isCorrect: false }
-                        ];
-                        exp = `Số neutron $N = A - Z = ${A} - ${Z} = ${A - Z}$.`;
-                    } else if (chapter.includes("Bảng tuần hoàn")) {
-                        rawTitle = `Nguyên tố có số hiệu nguyên tử $Z = ${i}$ thuộc chu kỳ và nhóm tương ứng trong Bảng tuần hoàn. Số electron ở vỏ nguyên tử là:`;
-                        opts = [
-                            { text: `$${i}$ electron`, isCorrect: true },
-                            { text: `$${i+1}$ electron`, isCorrect: false },
-                            { text: `$${i*2}$ electron`, isCorrect: false },
-                            { text: `$${i-1}$ electron`, isCorrect: false }
-                        ];
-                        exp = "Số hiệu nguyên tử $Z = \\text{Số proton} = \\text{Số electron}$.";
-                    } else if (chapter.includes("Liên kết")) {
-                        rawTitle = `Liên kết hóa học hình thành do sự dùng chung các cặp electron giữa 2 nguyên tử là loại liên kết nào?`;
-                        opts = [
-                            { text: "Liên kết cộng hóa trị", isCorrect: true },
-                            { text: "Liên kết ion", isCorrect: false },
-                            { text: "Liên kết kim loại", isCorrect: false },
-                            { text: "Liên kết Hydrogen", isCorrect: false }
-                        ];
-                        exp = "Liên kết cộng hóa trị là liên kết được hình thành giữa hai nguyên tử bằng một hay nhiều cặp electron dùng chung.";
-                    } else if (chapter.includes("Oxi hóa")) {
-                        rawTitle = `Trong phản ứng oxi hóa - khử, chất nhường electron được gọi là:`;
-                        opts = [
-                            { text: "Chất khử (chất bị oxi hóa)", isCorrect: true },
-                            { text: "Chất oxi hóa", isCorrect: false },
-                            { text: "Môi trường", isCorrect: false },
-                            { text: "Chất xúc tác", isCorrect: false }
-                        ];
-                        exp = "Chất khử là chất nhường electron (số oxi hóa tăng sau phản ứng). Khử cho - Oxi nhận.";
-                    } else if (chapter.includes("Năng lượng")) {
-                        rawTitle = `Phản ứng hóa học có biến thiên enthalpy $\\Delta_r H^0_{298} < 0$ là phản ứng:`;
-                        opts = [
-                            { text: "Tỏa nhiệt", isCorrect: true },
-                            { text: "Thu nhiệt", isCorrect: false },
-                            { text: "Không thay đổi nhiệt", isCorrect: false },
-                            { text: "Phân hủy hạt nhân", isCorrect: false }
-                        ];
-                        exp = "Nếu $\\Delta_r H^0_{298} < 0$ thì phản ứng tỏa nhiệt ra môi trường.";
-                    } else if (chapter.includes("Tốc độ")) {
-                        rawTitle = `Khi tăng nhiệt độ của hệ phản ứng, tốc độ phản ứng hóa học thường có xu hướng:`;
-                        opts = [
-                            { text: "Tăng lên", isCorrect: true },
-                            { text: "Giảm đi", isCorrect: false },
-                            { text: "Không đổi", isCorrect: false },
-                            { text: "Dừng lại hoàn toàn", isCorrect: false }
-                        ];
-                        exp = "Khi nhiệt độ tăng, các hạt chuyển động nhanh hơn làm tăng số va chạm hiệu quả, dẫn đến tốc độ phản ứng tăng.";
+                } else { // Chemistry
+                    if (type === 'mc') {
+                        qText = `Nguyên tử của nguyên tố $X$ có số hiệu nguyên tử $Z = ${i + 5}$. Số proton trong hạt nhân nguyên tử $X$ là:`;
+                        opts = [`${i + 5}`, `${i + 10}`, `${i}`, `${(i + 5) * 2}`];
+                        correct = 0;
+                        expl = `Số hiệu nguyên tử $Z = \\text{Số proton} = ${i + 5}$.`;
+                    } else if (type === 'tf') {
+                        qText = `Mệnh đề: "Trong phản ứng Oxi hóa - Khử, chất bị oxi hóa là chất nhường electron" là Đúng hay Sai?`;
+                        correct = true;
+                        expl = `Chất khử (chất bị oxi hóa) nhường electron. Mệnh đề này ĐÚNG.`;
                     } else {
-                        rawTitle = `Đơn chất Halogen nào sau đây ở điều kiện thường tồn tại ở thể khí và có màu vàng lục?`;
-                        opts = [
-                            { text: "Chlorine ($Cl_2$)", isCorrect: true },
-                            { text: "Bromine ($Br_2$)", isCorrect: false },
-                            { text: "Iodine ($I_2$)", isCorrect: false },
-                            { text: "Fluorine ($F_2$)", isCorrect: false }
-                        ];
-                        exp = "Chlorine ($Cl_2$) là chất khí màu vàng lục, xốc và độc.";
+                        qText = `Nguyên tử $Y$ có $Z = ${i + 8}$ và số mass $A = ${(i + 8) * 2 + 1}$. Hãy tính số neutron $N$ của nguyên tử $Y$.`;
+                        correct = `${i + 9}`;
+                        keywords = [`${i + 9}`];
+                        expl = `Số neutron $N = A - Z = [${(i + 8) * 2 + 1}] - [${i + 8}] = ${i + 9}$.`;
                     }
                 }
 
                 list.push({
-                    subject: subject,
-                    chapter: chapter,
-                    question: rawTitle,
-                    options: opts,
-                    explanation: exp
+                    id: `${subjectId}_${chapterId}_q${i}`,
+                    subjectId, chapterId, type, question: qText,
+                    options: opts, correct, explanation: expl, keywords,
+                    difficulty: diff
                 });
             }
-
             return list;
         }
 
-        // Initialize Data
-        function initData() {
-            const saved = localStorage.getItem('grade10_quiz_bank_2026_v2');
-            if (saved) {
-                try {
-                    questionBank = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Parse error", e);
-                    buildInitialBank();
-                }
-            } else {
-                buildInitialBank();
-            }
-        }
+        // State Management
+        let appState = {
+            activeSubject: 'math',
+            selectedChapter: null,
+            selectedDiff: 'all',
+            selectedCount: 30,
+            currentQuiz: [],
+            userAnswers: {},
+            quizTimer: null,
+            elapsedSeconds: 0,
+            isSubmitted: false
+        };
 
-        function buildInitialBank() {
-            let fullBank = [];
-            Object.keys(CURRICULUM_STRUCTURE).forEach(subject => {
-                CURRICULUM_STRUCTURE[subject].forEach(chapter => {
-                    const chapterQuestions = generate40QuestionsForChapter(subject, chapter);
-                    fullBank.push(...chapterQuestions);
-                });
-            });
-            questionBank = fullBank;
-            saveQuestionBank();
-        }
-
-        function saveQuestionBank() {
-            try {
-                localStorage.setItem('grade10_quiz_bank_2026_v2', JSON.stringify(questionBank));
-            } catch(e) {
-                console.error("Storage full or error", e);
-            }
-        }
-
-        // Filter and Render Dashboard
-        function filterBySubject(subject) {
-            currentSubjectFilter = subject;
-            ['ALL', 'Toán Học', 'Vật Lý', 'Hóa Học'].forEach(s => {
-                const idMap = { 'ALL': 'tabALL', 'Toán Học': 'tabToan', 'Vật Lý': 'tabLy', 'Hóa Học': 'tabHoa' };
-                const btn = document.getElementById(idMap[s]);
-                if (btn) {
-                    if (s === subject) {
-                        btn.className = "px-4 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition font-semibold";
-                    } else {
-                        btn.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition font-semibold";
-                    }
-                }
-            });
-            renderDashboard();
-        }
-
-        function renderDashboard() {
-            const grid = document.getElementById('chaptersGrid');
-            const totalBadge = document.getElementById('totalQuestionsBadge');
-            grid.innerHTML = '';
-
-            let filteredBank = questionBank;
-            if (currentSubjectFilter !== 'ALL') {
-                filteredBank = questionBank.filter(q => q.subject === currentSubjectFilter);
-            }
-
-            totalBadge.innerText = `Kho: ${filteredBank.length} câu hỏi`;
-
-            const activeSubjects = currentSubjectFilter === 'ALL' 
-                ? Object.keys(CURRICULUM_STRUCTURE) 
-                : [currentSubjectFilter];
-
-            const subjectIcons = {
-                "Toán Học": "fa-calculator text-blue-500",
-                "Vật Lý": "fa-bolt text-amber-500",
-                "Hóa Học": "fa-flask text-emerald-500"
-            };
-
-            activeSubjects.forEach(sub => {
-                const chapters = CURRICULUM_STRUCTURE[sub] || [];
-                chapters.forEach(chap => {
-                    const count = questionBank.filter(q => q.subject === sub && q.chapter === chap).length;
-                    
-                    grid.innerHTML += `
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md flex items-center gap-1.5">
-                                        <i class="fa-solid ${subjectIcons[sub] || 'fa-book'}"></i> ${sub}
-                                    </span>
-                                    <span class="text-xs text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full">${count} câu</span>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-base mb-2 line-clamp-2">${chap}</h4>
-                            </div>
-                            <button onclick="startQuizForChapter('${sub}', '${chap.replace(/'/g, "\\'")}')" class="mt-4 w-full py-2.5 bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white rounded-xl font-bold text-sm transition flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Luyện tập chương này
-                            </button>
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        function shuffleArray(arr) {
-            const array = [...arr];
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function getSelectedConfigNumQuestions(totalAvailable) {
-            const configVal = document.getElementById('configNumQuestions').value;
-            if (configVal === 'all') return totalAvailable;
-            return Math.min(parseInt(configVal) || 5, totalAvailable);
-        }
-
-        function generateRandomQuiz(subjectFilter = 'ALL') {
-            let pool = questionBank;
-            if (subjectFilter !== 'ALL') {
-                pool = questionBank.filter(q => q.subject === subjectFilter);
-            }
-            
-            if (pool.length === 0) {
-                showToast("Không có câu hỏi nào!", "error");
-                return;
-            }
-
-            const numQ = getSelectedConfigNumQuestions(pool.length);
-            const shuffledPool = shuffleArray(pool).slice(0, numQ);
-            
-            currentActiveChapter = null;
-            startQuizWithQuestions(shuffledPool, "Đề Thi Ngẫu Nhiên Tổng hợp");
-        }
-
-        function startQuizForChapter(sub, chap) {
-            const pool = questionBank.filter(q => q.subject === sub && q.chapter === chap);
-            if (pool.length === 0) {
-                showToast("Chương này chưa có câu hỏi!", "error");
-                return;
-            }
-
-            const numQ = getSelectedConfigNumQuestions(pool.length);
-            const shuffledPool = shuffleArray(pool).slice(0, numQ);
-
-            currentActiveChapter = { subject: sub, chapter: chap };
-            startQuizWithQuestions(shuffledPool, `${sub} - ${chap}`);
-        }
-
-        function retryCurrentQuiz() {
-            if (currentActiveChapter) {
-                startQuizForChapter(currentActiveChapter.subject, currentActiveChapter.chapter);
-            } else {
-                generateRandomQuiz('ALL');
-            }
-        }
-
-        function startQuizWithQuestions(questions, title) {
-            const shouldShuffle = document.getElementById('configShuffleOptions').value === "true";
-            
-            currentQuizQuestions = questions.map(q => {
-                let options = [...q.options];
-                if (shouldShuffle) {
-                    options = shuffleArray(options);
-                }
-                return {
-                    ...q,
-                    options: options
-                };
-            });
-
-            userAnswers = {};
-            document.getElementById('quizTitle').innerText = title;
-            
-            // Render Questions
-            const qContainer = document.getElementById('questionsContainer');
-            const navGrid = document.getElementById('questionNavGrid');
-            qContainer.innerHTML = '';
-            navGrid.innerHTML = '';
-
-            currentQuizQuestions.forEach((q, idx) => {
-                // Navigation item
-                navGrid.innerHTML += `
-                    <button id="navBtn_${idx}" onclick="scrollToQuestion(${idx})" class="w-full aspect-square text-xs font-bold rounded-lg border border-slate-300 bg-slate-50 text-slate-700 hover:border-indigo-500 flex items-center justify-center transition">
-                        ${idx + 1}
-                    </button>
-                `;
-
-                // Question Card (Ensuring Question Label always counts 1, 2, 3... N correctly)
-                const optionsHtml = q.options.map((opt, oIdx) => `
-                    <label class="p-3.5 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 flex items-center gap-3 cursor-pointer transition">
-                        <input type="radio" name="question_${idx}" value="${oIdx}" onchange="selectAnswer(${idx}, ${oIdx})" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
-                        <span class="text-sm font-medium text-slate-700">${opt.text}</span>
-                    </label>
-                `).join('');
-
-                qContainer.innerHTML += `
-                    <div id="questionCard_${idx}" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex items-center justify-between border-b pb-3">
-                            <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-md">Câu ${idx + 1} / ${currentQuizQuestions.length}</span>
-                            <span class="text-xs text-slate-500 font-medium">${q.subject}</span>
-                        </div>
-                        <div class="text-base font-semibold text-slate-800">Câu ${idx + 1}: ${q.question}</div>
-                        <div class="space-y-2.5">${optionsHtml}</div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('dashboardView').classList.add('hidden');
-            document.getElementById('resultView').classList.add('hidden');
-            document.getElementById('quizView').classList.remove('hidden');
-
-            updateQuizProgress();
-            startQuizTimer();
-
-            // Explicitly render Math in Quiz View
-            renderMathInContainer('quizView');
-        }
-
-        // Timer Functions
-        function startQuizTimer() {
-            clearInterval(quizTimerInterval);
-            quizSeconds = 0;
-            updateTimerDisplay();
-            quizTimerInterval = setInterval(() => {
-                quizSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const mins = String(Math.floor(quizSeconds / 60)).padStart(2, '0');
-            const secs = String(quizSeconds % 60).padStart(2, '0');
-            document.getElementById('quizTimer').innerText = `${mins}:${secs}`;
-        }
-
-        function stopQuizTimer() {
-            clearInterval(quizTimerInterval);
-        }
-
-        // Selection & Progress Handlers
-        function selectAnswer(qIndex, oIndex) {
-            userAnswers[qIndex] = oIndex;
-            updateQuizProgress();
-            
-            const navBtn = document.getElementById(`navBtn_${qIndex}`);
-            if (navBtn) {
-                navBtn.className = "w-full aspect-square text-xs font-bold rounded-lg border border-indigo-600 bg-indigo-600 text-white flex items-center justify-center transition shadow-sm";
-            }
-        }
-
-        function updateQuizProgress() {
-            const answeredCount = Object.keys(userAnswers).length;
-            const total = currentQuizQuestions.length;
-            document.getElementById('quizProgressText').innerText = `Đã làm ${answeredCount}/${total} câu`;
-        }
-
-        function scrollToQuestion(index) {
-            const qCard = document.getElementById(`questionCard_${index}`);
-            if (qCard) {
-                qCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-
-        function submitQuiz() {
-            stopQuizTimer();
-            
-            let correctCount = 0;
-            currentQuizQuestions.forEach((q, idx) => {
-                const userChoice = userAnswers[idx];
-                if (userChoice !== undefined && q.options[userChoice] && q.options[userChoice].isCorrect) {
-                    correctCount++;
-                }
-            });
-
-            const score = ((correctCount / currentQuizQuestions.length) * 10).toFixed(1);
-
-            document.getElementById('resultScore').innerText = `${score}/10`;
-            document.getElementById('resultCorrectCount').innerText = `${correctCount}/${currentQuizQuestions.length}`;
-            
-            const mins = String(Math.floor(quizSeconds / 60)).padStart(2, '0');
-            const secs = String(quizSeconds % 60).padStart(2, '0');
-            document.getElementById('resultTime').innerText = `${mins}:${secs}`;
-
-            // Render Review
-            const reviewContainer = document.getElementById('reviewContainer');
-            reviewContainer.innerHTML = '';
-
-            currentQuizQuestions.forEach((q, idx) => {
-                const userChoice = userAnswers[idx];
-                const correctOptionIndex = q.options.findIndex(o => o.isCorrect);
-                const isCorrect = userChoice !== undefined && userChoice === correctOptionIndex;
-
-                let statusBadge = isCorrect 
-                    ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-md font-bold"><i class="fa-solid fa-check mr-1"></i>Chính xác</span>`
-                    : `<span class="bg-rose-100 text-rose-700 text-xs px-2.5 py-1 rounded-md font-bold"><i class="fa-solid fa-xmark mr-1"></i>Chưa chính xác</span>`;
-
-                let optionsReviewHtml = q.options.map((opt, oIdx) => {
-                    let styleClass = "border-slate-200 bg-slate-50 text-slate-700";
-                    if (oIdx === correctOptionIndex) {
-                        styleClass = "border-emerald-500 bg-emerald-50 text-emerald-800 font-bold";
-                    } else if (oIdx === userChoice && !opt.isCorrect) {
-                        styleClass = "border-rose-500 bg-rose-50 text-rose-800 font-bold";
-                    }
-
-                    return `
-                        <div class="p-3 rounded-xl border text-sm flex items-center justify-between ${styleClass}">
-                            <span>${opt.text}</span>
-                            ${oIdx === correctOptionIndex ? '<span class="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded">Đáp án đúng</span>' : ''}
-                            ${oIdx === userChoice && !opt.isCorrect ? '<span class="text-xs bg-rose-600 text-white px-2 py-0.5 rounded">Lựa chọn của bạn</span>' : ''}
-                        </div>
-                    `;
-                }).join('');
-
-                reviewContainer.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-500">Câu ${idx + 1}: ${q.subject} - ${q.chapter}</span>
-                            ${statusBadge}
-                        </div>
-                        <div class="text-base font-semibold text-slate-800">Câu ${idx + 1}: ${q.question}</div>
-                        <div class="space-y-2 pt-1">${optionsReviewHtml}</div>
-                        ${q.explanation ? `
-                            <div class="bg-indigo-50 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 mt-2">
-                                <strong><i class="fa-solid fa-lightbulb mr-1 text-amber-500"></i>Giải thích:</strong> ${q.explanation}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            });
-
-            document.getElementById('quizView').classList.add('hidden');
-            document.getElementById('resultView').classList.remove('hidden');
-
-            // Render Math formulas in Result Review
-            renderMathInContainer('reviewContainer');
-        }
-
-        function confirmExitQuiz() {
-            if (confirm("Bạn có chắc chắn muốn rời khỏi bài thi hiện tại?")) {
-                stopQuizTimer();
-                showDashboard();
-            }
+        // Render Functions
+        function initApp() {
+            showDashboard();
+            lucide.createIcons();
         }
 
         function showDashboard() {
-            stopQuizTimer();
-            document.getElementById('quizView').classList.add('hidden');
-            document.getElementById('resultView').classList.add('hidden');
-            document.getElementById('dashboardView').classList.remove('hidden');
-            renderDashboard();
-        }
-
-        // Add Question Form Handling
-        function openEditorModal() {
-            document.getElementById('editorModal').classList.remove('hidden');
-        }
-
-        function closeEditorModal() {
-            document.getElementById('editorModal').classList.add('hidden');
-        }
-
-        function saveNewQuestion(event) {
-            event.preventDefault();
-
-            const subject = document.getElementById('inputSubject').value;
-            const chapter = document.getElementById('inputChapter').value.trim();
-            const questionText = document.getElementById('inputQuestionText').value.trim();
-            const explanation = document.getElementById('inputExplanation').value.trim();
-
-            const correctIdx = parseInt(document.querySelector('input[name="correctIndex"]:checked').value);
-
-            const options = [
-                { text: document.getElementById('option0').value.trim(), isCorrect: correctIdx === 0 },
-                { text: document.getElementById('option1').value.trim(), isCorrect: correctIdx === 1 },
-                { text: document.getElementById('option2').value.trim(), isCorrect: correctIdx === 2 },
-                { text: document.getElementById('option3').value.trim(), isCorrect: correctIdx === 3 }
-            ];
-
-            const newQ = {
-                subject,
-                chapter,
-                question: questionText,
-                options,
-                explanation
-            };
-
-            questionBank.push(newQ);
-            saveQuestionBank();
-            closeEditorModal();
-            document.getElementById('addQuestionForm').reset();
+            clearInterval(appState.quizTimer);
+            const container = document.getElementById('main-content');
+            const subj = subjectsData[appState.activeSubject];
             
-            showToast("Đã thêm câu hỏi thành công!", "success");
-            renderDashboard();
+            container.innerHTML = `
+                <!-- Subject Tabs -->
+                <div class="flex flex-wrap border-b border-slate-200 mb-6 gap-2">
+                    ${Object.keys(subjectsData).map(key => {
+                        const s = subjectsData[key];
+                        const isActive = appState.activeSubject === key;
+                        return `
+                            <button onclick="switchSubject('${key}')" class="px-5 py-3 font-bold text-sm border-b-2 flex items-center gap-2 transition cursor-pointer ${isActive ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50 rounded-t-xl' : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-t-xl'}">
+                                <i data-lucide="${s.icon}" class="w-4 h-4"></i> ${s.name}
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+
+                <!-- Chapter Grid -->
+                <div class="mb-4 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">${subj.name}</h2>
+                        <p class="text-xs text-slate-500 font-medium">Chọn chương bài tập để bắt đầu làm bài kiểm tra trắc nghiệm, đúng/sai và tự luận</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    ${subj.chapters.map(ch => `
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition duration-200 flex flex-col justify-between group">
+                            <div>
+                                <span class="inline-block px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-[11px] font-bold mb-3 uppercase tracking-wider">
+                                    Lớp 10
+                                </span>
+                                <h3 class="font-bold text-slate-800 text-base group-hover:text-indigo-600 transition leading-snug mb-2">${ch.title}</h3>
+                                <p class="text-xs text-slate-500">Đa dạng 3 dạng bài: Trắc nghiệm A-D, Đúng/Sai & Tự luận ngắn.</p>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-400">40 Câu trong kho</span>
+                                <button onclick="openConfigModal('${ch.id}', '${ch.title}')" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                                    <i data-lucide="play-circle" class="w-4 h-4"></i> Ôn tập ngay
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            lucide.createIcons();
         }
 
-        function showToast(msg, type = "success") {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            const toastIcon = document.getElementById('toastIcon');
+        function switchSubject(key) {
+            appState.activeSubject = key;
+            showDashboard();
+        }
 
-            toastMsg.innerText = msg;
-            toastIcon.className = type === "success" 
-                ? "fa-solid fa-circle-check text-emerald-400" 
-                : "fa-solid fa-circle-exclamation text-rose-400";
+        // Modal Controls
+        function openConfigModal(chapterId, chapterTitle) {
+            appState.selectedChapter = chapterId;
+            document.getElementById('modal-chapter-title').innerText = chapterTitle;
+            document.getElementById('modal-subject-subtitle').innerText = subjectsData[appState.activeSubject].name;
+            document.getElementById('quiz-config-modal').classList.remove('hidden');
+        }
 
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
+        function closeConfigModal() {
+            document.getElementById('quiz-config-modal').classList.add('hidden');
+        }
 
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+        function selectDifficulty(diff) {
+            appState.selectedDiff = diff;
+            document.querySelectorAll('.diff-option').forEach(btn => {
+                btn.className = "diff-option px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer";
+            });
+            const activeBtn = document.getElementById(`diff-btn-${diff}`);
+            if (activeBtn) {
+                activeBtn.className = "diff-option px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition border-indigo-600 bg-indigo-50 text-indigo-700 cursor-pointer";
+            }
+        }
+
+        function selectCount(cnt) {
+            appState.selectedCount = cnt;
+            document.querySelectorAll('.count-option').forEach(btn => {
+                btn.className = "count-option px-3 py-2 rounded-xl border text-xs font-bold text-center border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer";
+            });
+            const activeBtn = document.getElementById(`count-btn-${cnt}`);
+            if (activeBtn) {
+                activeBtn.className = "count-option px-3 py-2 rounded-xl border text-xs font-bold text-center border-indigo-600 bg-indigo-50 text-indigo-700 cursor-pointer";
+            }
+        }
+
+        // Start Quiz Generation
+        function startQuizWithConfig() {
+            closeConfigModal();
+            const fullBank = generateQuestionsForChapter(appState.activeSubject, appState.selectedChapter, 40);
+            
+            let filtered = fullBank;
+            if (appState.selectedDiff !== 'all') {
+                filtered = fullBank.filter(q => q.difficulty === appState.selectedDiff);
+            }
+            if (filtered.length === 0) filtered = fullBank;
+
+            const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+            appState.currentQuiz = shuffled.slice(0, Math.min(appState.selectedCount, shuffled.length));
+            appState.userAnswers = {};
+            appState.elapsedSeconds = 0;
+            appState.isSubmitted = false;
+
+            renderQuizView();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(appState.quizTimer);
+            appState.quizTimer = setInterval(() => {
+                appState.elapsedSeconds++;
+                const mins = Math.floor(appState.elapsedSeconds / 60).toString().padStart(2, '0');
+                const secs = (appState.elapsedSeconds % 60).toString().padStart(2, '0');
+                const timerEl = document.getElementById('quiz-timer-display');
+                if (timerEl) timerEl.innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function renderQuizView() {
+            const container = document.getElementById('main-content');
+            const total = appState.currentQuiz.length;
+            const answeredCount = Object.keys(appState.userAnswers).filter(k => appState.userAnswers[k] !== undefined && appState.userAnswers[k] !== "").length;
+            const chapterInfo = subjectsData[appState.activeSubject].chapters.find(c => c.id === appState.selectedChapter);
+
+            container.innerHTML = `
+                <!-- Quiz Header -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
+                            <span>${subjectsData[appState.activeSubject].name}</span>
+                            <span>•</span>
+                            <span>${chapterInfo ? chapterInfo.title : ''}</span>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-900">Bài Kiểm Tra Hỗn Hợp (${total} câu)</h2>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="bg-slate-100 px-3.5 py-1.5 rounded-xl font-mono text-sm font-bold text-slate-700 flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-4 h-4 text-indigo-600"></i>
+                            <span id="quiz-timer-display">00:00</span>
+                        </div>
+                        <button onclick="submitQuiz()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm rounded-xl transition shadow-xs cursor-pointer flex items-center gap-1.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Nộp Bài
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Layout Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <!-- Questions List -->
+                    <div class="lg:col-span-3 flex flex-col gap-6">
+                        ${appState.currentQuiz.map((q, idx) => {
+                            const dMeta = difficultyMeta[q.difficulty];
+                            const tMeta = typeMeta[q.type];
+
+                            let inputAreaHtml = "";
+                            if (q.type === 'mc') {
+                                inputAreaHtml = `
+                                    <div class="grid grid-cols-1 gap-2.5 mt-2">
+                                        ${q.options.map((opt, optIdx) => {
+                                            const labels = ['A', 'B', 'C', 'D'];
+                                            const isChecked = appState.userAnswers[q.id] === optIdx;
+                                            return `
+                                                <label onclick="recordAnswer('${q.id}', ${optIdx})" class="flex items-start gap-3 p-3.5 rounded-xl border transition cursor-pointer ${isChecked ? 'border-indigo-600 bg-indigo-50/50 text-indigo-900 font-semibold' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}">
+                                                    <input type="radio" name="q_${q.id}" ${isChecked ? 'checked' : ''} class="mt-1 text-indigo-600">
+                                                    <span class="text-sm"><strong class="mr-1.5">${labels[optIdx]}.</strong> ${opt}</span>
+                                                </label>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                `;
+                            } else if (q.type === 'tf') {
+                                const isTrue = appState.userAnswers[q.id] === true;
+                                const isFalse = appState.userAnswers[q.id] === false;
+                                inputAreaHtml = `
+                                    <div class="grid grid-cols-2 gap-4 mt-2">
+                                        <button onclick="recordAnswer('${q.id}', true)" class="p-3.5 rounded-xl border font-bold text-sm transition cursor-pointer flex items-center justify-center gap-2 ${isTrue ? 'border-emerald-600 bg-emerald-50 text-emerald-800' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}">
+                                            <i data-lucide="check" class="w-4 h-4"></i> ĐÚNG
+                                        </button>
+                                        <button onclick="recordAnswer('${q.id}', false)" class="p-3.5 rounded-xl border font-bold text-sm transition cursor-pointer flex items-center justify-center gap-2 ${isFalse ? 'border-rose-600 bg-rose-50 text-rose-800' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}">
+                                            <i data-lucide="x" class="w-4 h-4"></i> SAI
+                                        </button>
+                                    </div>
+                                `;
+                            } else if (q.type === 'essay') {
+                                const val = appState.userAnswers[q.id] || "";
+                                inputAreaHtml = `
+                                    <div class="mt-2 flex flex-col gap-2">
+                                        <label class="text-xs font-bold text-slate-500 uppercase">Nhập câu trả lời hoặc số đáp án:</label>
+                                        <textarea rows="3" oninput="recordAnswer('${q.id}', this.value)" placeholder="Nhập kết quả hoặc lời giải vắn tắt của bạn vào đây..." class="w-full p-3 rounded-xl border border-slate-200 text-sm focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none bg-slate-50/50">${val}</textarea>
+                                    </div>
+                                `;
+                            }
+
+                            return `
+                                <div id="question-card-${idx}" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-4">
+                                    <div class="flex justify-between items-start gap-3">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-black text-xs flex items-center justify-center">
+                                                ${idx + 1}
+                                            </span>
+                                            <span class="text-xs font-bold px-2.5 py-1 rounded-md ${tMeta.bg} ${tMeta.text}">
+                                                ${tMeta.label}
+                                            </span>
+                                            <span class="text-xs font-bold px-2.5 py-1 rounded-md border ${dMeta.bg} ${dMeta.text} ${dMeta.border}">
+                                                ${dMeta.label}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-base font-semibold text-slate-800 leading-relaxed">
+                                        ${q.question}
+                                    </div>
+
+                                    ${inputAreaHtml}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- Sidebar Palette -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs sticky top-24">
+                            <h3 class="font-bold text-slate-800 text-sm mb-3 flex justify-between items-center">
+                                <span>Tiến Độ Làm Bài</span>
+                                <span class="text-xs font-normal text-slate-500">${answeredCount}/${total} đã làm</span>
+                            </h3>
+
+                            <div class="grid grid-cols-5 gap-2 max-h-[60vh] overflow-y-auto custom-scrollbar p-1">
+                                ${appState.currentQuiz.map((q, idx) => {
+                                    const isAns = appState.userAnswers[q.id] !== undefined && appState.userAnswers[q.id] !== "";
+                                    return `
+                                        <a href="#question-card-${idx}" class="h-9 rounded-xl font-bold text-xs flex items-center justify-center border transition ${isAns ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}">
+                                            ${idx + 1}
+                                        </a>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        }
+
+        function recordAnswer(questionId, value) {
+            appState.userAnswers[questionId] = value;
+            renderQuizView();
+        }
+
+        // Submit Quiz & Evaluate
+        function submitQuiz() {
+            clearInterval(appState.quizTimer);
+            appState.isSubmitted = true;
+
+            let correctCount = 0;
+            appState.currentQuiz.forEach(q => {
+                const uAns = appState.userAnswers[q.id];
+                if (q.type === 'mc' || q.type === 'tf') {
+                    if (uAns === q.correct) correctCount++;
+                } else if (q.type === 'essay') {
+                    if (uAns && q.keywords.some(kw => String(uAns).trim().toLowerCase().includes(kw.toLowerCase()))) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            const total = appState.currentQuiz.length;
+            const score = ((correctCount / total) * 10).toFixed(1);
+            const container = document.getElementById('main-content');
+
+            container.innerHTML = `
+                <!-- Result Overview -->
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs mb-8 text-center max-w-2xl mx-auto flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 font-black text-2xl flex items-center justify-center">
+                        ${score}
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Kết Quả Bài Làm</h2>
+                        <p class="text-xs text-slate-500 mt-1">Đúng ${correctCount} / ${total} câu hỏi • Thời gian làm bài: ${Math.floor(appState.elapsedSeconds / 60)}m ${appState.elapsedSeconds % 60}s</p>
+                    </div>
+
+                    <div class="flex gap-3 mt-2">
+                        <button onclick="showDashboard()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition cursor-pointer">
+                            Quay lại trang chủ
+                        </button>
+                        <button onclick="startQuizWithConfig()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition shadow-xs cursor-pointer">
+                            Thử lại đề mới
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Detailed Review -->
+                <div class="max-w-3xl mx-auto flex flex-col gap-6">
+                    <h3 class="font-bold text-slate-900 text-lg">Chi Tiết Lời Giải & Đáp Án</h3>
+
+                    ${appState.currentQuiz.map((q, idx) => {
+                        const userAns = appState.userAnswers[q.id];
+                        let isCorrect = false;
+                        let userAnsText = "Chưa trả lời";
+                        let correctAnsText = "";
+
+                        if (q.type === 'mc') {
+                            const labels = ['A', 'B', 'C', 'D'];
+                            if (userAns !== undefined) userAnsText = `${labels[userAns]}. ${q.options[userAns]}`;
+                            correctAnsText = `${labels[q.correct]}. ${q.options[q.correct]}`;
+                            isCorrect = userAns === q.correct;
+                        } else if (q.type === 'tf') {
+                            if (userAns !== undefined) userAnsText = userAns ? "Đúng" : "Sai";
+                            correctAnsText = q.correct ? "Đúng" : "Sai";
+                            isCorrect = userAns === q.correct;
+                        } else if (q.type === 'essay') {
+                            userAnsText = userAns ? userAns : "(Chưa nhập câu trả lời)";
+                            correctAnsText = q.correct;
+                            isCorrect = userAns && q.keywords.some(kw => String(userAns).trim().toLowerCase().includes(kw.toLowerCase()));
+                        }
+
+                        const dMeta = difficultyMeta[q.difficulty];
+                        const tMeta = typeMeta[q.type];
+
+                        return `
+                            <div class="bg-white p-6 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/10' : 'border-rose-200 bg-rose-50/10'} shadow-xs flex flex-col gap-4">
+                                <div class="flex justify-between items-start gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-slate-800 text-sm">Câu ${idx + 1}:</span>
+                                        <span class="text-xs font-bold px-2.5 py-0.5 rounded-md ${tMeta.bg} ${tMeta.text}">${tMeta.label}</span>
+                                        <span class="text-xs font-bold px-2.5 py-0.5 rounded-md border ${dMeta.bg} ${dMeta.text} ${dMeta.border}">${dMeta.label}</span>
+                                    </div>
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
+                                        ${isCorrect ? 'Đúng' : 'Sai'}
+                                    </span>
+                                </div>
+
+                                <div class="text-sm font-semibold text-slate-800">${q.question}</div>
+
+                                <div class="text-xs space-y-1">
+                                    <div class="text-slate-600">
+                                        <strong>Bạn chọn / trả lời:</strong> 
+                                        <span class="${isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}">${userAnsText}</span>
+                                    </div>
+                                    <div class="text-slate-600">
+                                        <strong>Đáp án chuẩn:</strong> 
+                                        <span class="text-indigo-700 font-bold">${correctAnsText}</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-100 text-xs text-slate-700 mt-1">
+                                    <div class="font-bold text-indigo-900 mb-1">Hướng dẫn giải chi tiết:</div>
+                                    <div>${q.explanation}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            lucide.createIcons();
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
         }
 
         // Initialize App
-        window.onload = function() {
-            initData();
-            renderDashboard();
-        };
+        window.onload = initApp;
     </script>
 </body>
 </html>
